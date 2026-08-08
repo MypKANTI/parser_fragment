@@ -27,7 +27,7 @@ from src.utils import banner, check_input, installer
 os.makedirs('logs', exist_ok=True)
 
 logging.basicConfig(
-    level=logging.DEBUG,  # уровень логирование
+    level=logging.ERROR,  # уровень логирование
     format="| %(asctime)s | %(levelname)s | %(message)s |",
     encoding="UTF-8",  # чтобы не было такого �
     handlers=[
