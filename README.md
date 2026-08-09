@@ -10,11 +10,11 @@
 
 ## Install 
 ```bash
-pip3 install requirements.txt
-
 git clone https://github.com/MypKANTI/parser_fragment.git
 
 cd parser_fragment
+
+pip3 install requirements.txt
 
 python3 main.py
 ```
