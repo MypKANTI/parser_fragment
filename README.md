@@ -14,7 +14,7 @@ git clone https://github.com/MypKANTI/parser_fragment.git
 
 cd parser_fragment
 
-pip3 install requirements.txt
+pip3 install -r requirements.txt
 
 python3 main.py
 ```
@@ -39,7 +39,7 @@ class Config:
 замените *```PARSER = "lxml"```* на *```PARSER = "html.parser"```*
 
 ## если у вас Windows
-советую вам установить этот проект не через git а через архив перейдите в нужную папку это **parser_fragment** и там выполните команду ```pip3 install requirements.txt``` и после этого запустите файл **start.bat**
+советую вам установить этот проект не через git а через архив перейдите в нужную папку это **parser_fragment** и там выполните команду ```pip3 install -r requirements.txt``` и после этого запустите файл **start.bat**
 
 ## особенность
 этот парсер не просто проверяет занят ли юзер или нет он узнаёт его точный статус такой как продано или на продажу или занят или не занят или активный
