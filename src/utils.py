@@ -354,10 +354,11 @@ class GetInfoFull:
         """
         # переходим по нужному пути
         main_content = self.soup.find("main", class_="tm-main js-main-content")
-        section = main_content.find(
-            "section", class_="tm-section tm-auction-section"
-        )
         try:
+            section = main_content.find(
+                "section", class_="tm-section tm-auction-section"
+            )
+        
             div = section.find(
                 "div", class_="tm-section-box tm-section-bid-info"
             )
@@ -512,6 +513,8 @@ class GetInfoFull:
             )[index_table]
         except IndexError:
             return None
+        except AttributeError:
+            return None
         tm_table = tm_section.find("div", class_="tm-table-wrap")
         table_tm = tm_table.find(
             "table", class_="table tm-table tm-table-fixed"
@@ -545,6 +548,8 @@ class GetInfoFull:
                 "section", class_="tm-section clearfix"
             )[index_table]
         except IndexError:
+            return None
+        except AttributeError:
             return None
         div_wrap = tm_section.find("div", class_="tm-table-wrap")
         table_fixed = div_wrap.find(
