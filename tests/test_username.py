@@ -34,3 +34,16 @@ def test_check_valid_username_local():
     assert (
         UsernameParser.check_valid_username_local("u" * 33) is False
     )  # Проверка на привышения
+    
+    assert (
+        UsernameParser.check_valid_username_local("username") is True
+    )  # Проверка на валидный юзернейм
+    
+    assert (
+        UsernameParser.check_valid_username_local("Username") is True
+    )  # Проверка на валидный юзернейм с большой буквы
+    
+    assert (
+            UsernameParser.check_valid_username_local("@username") is True
+    )  # Проверка на валидный юзернейм который начинаеться с @
+
