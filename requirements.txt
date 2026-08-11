@@ -2,4 +2,4 @@ aiohttp==3.10.5
 beautifulsoup4==4.12.3
 Faker==29.0.0
 prettytable==3.11.0
-lxml==5.3.0
+lxml 

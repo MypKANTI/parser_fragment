@@ -195,15 +195,31 @@ class NumberParser:
                 html = await resp.text()
                 soup = BeautifulSoup(html, Config.PARSER)
                 info_full_print = InfoFullPrint(soup)
-                info_full_print.status_and_()
-                print()
-                info_full_print.deal_end_time()
-                print()
-                info_full_print.table_fixed()
-                print()
-                info_full_print.table(0)
-                print()
-                info_full_print.table(1)
+                
+                # получаем таблицы
+                status_and_ = info_full_print.status_and_()
+                deal_end_time = info_full_print.deal_end_time()
+                table_fixed = info_full_print.table_fixed()
+                table_0 = info_full_print.table(0)
+                table_1 = info_full_print.table(1)
+                
+                # вывоим информацию
+                # статус
+                if status_and_ is not None:
+                    print(status_and_)
+                
+                #время до конца аукциона
+                if deal_end_time is not None:
+                    print(deal_end_time)
+                    
+                if table_fixed is not None:
+                    print(table_fixed)
+                    
+                if table_0 is not None:
+                    print(table_0)
+                
+                if table_1 is not None:
+                    print(table_1)
 
     @staticmethod
     async def run() -> None:

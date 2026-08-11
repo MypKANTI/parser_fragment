@@ -44,6 +44,10 @@ def test_check_valid_username_local():
     )  # Проверка на валидный юзернейм с большой буквы
     
     assert (
-            UsernameParser.check_valid_username_local("@username") is True
+        UsernameParser.check_valid_username_local("@username") is True
     )  # Проверка на валидный юзернейм который начинаеться с @
+    
+    assert (
+        UsernameParser.check_valid_username_local("username123") is True
+    )  # Проверка на валидный юзернейм который содержит цифры в конце
 

@@ -617,8 +617,8 @@ class UsernameParser:
         Какой тип парсинга юза
 
         Raises:
-            Exception: сори хз что пписать в исключениях
-            Exception: сори хз что пписать в исключениях
+            Exception: если не соотвествует длине
+            Exception: если не соотвествует длине
         """
         try:
             print(UsernameParser.banner())
@@ -632,11 +632,9 @@ class UsernameParser:
                 username = await UsernameParser.get_username(text="Введите юз")
                 is_exactly = check_input("точное совпадение? 1=Дa/2=Нет")
 
-                if is_exactly == 1:
+                if is_exactly <= 1:
                     is_exactly = True
-                elif is_exactly == 2:
-                    is_exactly = False
-                else:
+                elif is_exactly >= 2:
                     is_exactly = False
 
                 await UsernameParser.сheck_username_market(

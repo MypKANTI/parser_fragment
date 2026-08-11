@@ -67,13 +67,14 @@ def installer() -> None:
         "bs4",
         "faker",
         "prettytable",
+        "lxml"
     ]  # библиотеки которые надо импортировать
-    for im in imports:
+    for module in imports:
         try:
-            __import__(im)
+            __import__(module)
         except ModuleNotFoundError:
-            logging.warning(f"у вас нету модуля библиотеки {im}")
-            subprocess.run(["pip3", "install", f"{im}"])
+            logging.warning(f"у вас нету модуля библиотеки {module}")
+            subprocess.run(["pip3", "install", module])
 
 
 def banner(clear: bool = True) -> str:
@@ -730,7 +731,7 @@ class InfoFullPrint:
                 table.add_row([deal_end_time])  # таблица
 
         if deal_end_time:
-            print(table)
+            return table
 
     def status_and_(self) -> None:
         """
@@ -764,7 +765,7 @@ class InfoFullPrint:
         table.field_names = [*table_head]
         table.add_row([status, date])
 
-        print(table)
+        return table
 
     def table(self, index_table: int) -> None:
         """
@@ -795,4 +796,4 @@ class InfoFullPrint:
                     list_line_3 = []
                     continue
 
-            print(table)
+            return table
