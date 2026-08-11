@@ -537,9 +537,13 @@ class UsernameParser:
             (bool): если юз прощел проверку то вернёт True иначе False
         """
         # форматируем в удобный формат
-        username.strip()
-        username = username.lower()
-
+        try:
+            username.strip()
+            username = username.lower()
+        except AttributeError:
+            logging.warning(f'юз {username} не может быть пустым')
+            return False
+        
         # проверка на русские буквы
         if any(r_c in username for r_c in Config.ru_chars):
             logging.info("юз не может содержать русских букв")

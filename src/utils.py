@@ -21,7 +21,6 @@ from src.config import Config
 @dataclass(frozen=True)
 class Colors:
     """Палитра цветов для текста"""
-
     RED = "\033[31m"  # красный
     GREEN = "\033[32m"  # зелёный
     BLUE = "\033[34m"  # синий
@@ -58,23 +57,6 @@ def clear_screen() -> None:
     """Очистка экрана в незовисимости от ОС"""
     # os.system('cls' if os.name == 'nt' else 'clear')
     subprocess.run("cls" if os.name == "nt" else "clear", shell=True)
-
-
-def installer() -> None:
-    """Установка библиотек зависомостей для коректной работы программы"""
-    imports = [
-        "aiohttp",
-        "bs4",
-        "faker",
-        "prettytable",
-        "lxml"
-    ]  # библиотеки которые надо импортировать
-    for module in imports:
-        try:
-            __import__(module)
-        except ModuleNotFoundError:
-            logging.warning(f"у вас нету модуля библиотеки {module}")
-            subprocess.run(["pip3", "install", module])
 
 
 def banner(clear: bool = True) -> str:

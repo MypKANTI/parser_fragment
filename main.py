@@ -22,7 +22,7 @@ from src.numbers import NumberParser
 from src.premiums import PremiumParser
 from src.stars import StarParser
 from src.usernames import UsernameParser
-from src.utils import banner, check_input, installer
+from src.utils import banner, check_input
 
 # создаём папку если её нету
 os.makedirs('logs', exist_ok=True)
@@ -48,7 +48,6 @@ async def main() -> None:
     звёзды, премки, юзы, нфт, номера
     """
     while True:
-        installer()
         print(banner())
 
         user_input = check_input("ваш выбор")
