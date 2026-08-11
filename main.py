@@ -24,14 +24,19 @@ from src.stars import StarParser
 from src.usernames import UsernameParser
 from src.utils import banner, check_input, installer
 
+# создаём папку если её нету
 os.makedirs('logs', exist_ok=True)
+
+# определяем полный путь
+PATH = os.path.dirname(os.path.abspath(__file__))
+PATH_FILE_FULL = os.path.join(PATH, 'logs', "parser.log")
 
 logging.basicConfig(
     level=logging.ERROR,  # уровень логирование
     format="| %(asctime)s | %(levelname)s | %(message)s |",
     encoding="UTF-8",  # чтобы не было такого �
     handlers=[
-        logging.FileHandler(os.path.join('logs', "parser.log")),
+        logging.FileHandler(PATH_FILE_FULL),
         logging.StreamHandler(),
     ],
 )  # для логирование настройка
