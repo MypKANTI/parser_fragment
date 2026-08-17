@@ -525,7 +525,7 @@ class UsernameParser:
             return username
 
     @staticmethod
-    def check_valid_username_local(username: str) -> str:
+    def check_valid_username_local(username: str) -> bool:
         """
         Функция для проверки юза по правилам составления юза
         локально без доступа к интеренету
@@ -536,10 +536,8 @@ class UsernameParser:
         Returns:
             (bool): если юз прощел проверку то вернёт True иначе False
         """
-        # форматируем в удобный формат
         try:
-            username.strip()
-            username = username.lower()
+            username = username.lower().strip()
         except AttributeError:
             logging.warning(f'юз {username} не может быть пустым')
             return False

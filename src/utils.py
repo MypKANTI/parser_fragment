@@ -693,7 +693,7 @@ class InfoFullPrint:
                         # эта ошибка евляеться нормальной
                         logging.warning(e)
 
-    def deal_end_time(self, bloks: bool = True) -> None:
+    def deal_end_time(self, bloks: bool = True) -> PrettyTable:
         """
         функция для отображение времени в столбиках (таблицах)
         есть два вида меняеться он через измениния bloks на другой статус bool
@@ -729,7 +729,7 @@ class InfoFullPrint:
         if deal_end_time:
             return table
 
-    def status_and_(self) -> None:
+    def status_and_(self) -> PrettyTable:
         """
         Функция для удобного отображение статуса и
         ещё либо номера либо юза в столбике
@@ -763,7 +763,7 @@ class InfoFullPrint:
 
         return table
 
-    def table(self, index_table: int) -> None:
+    def table(self, index_table: int) -> PrettyTable:
         """
         Функция для отображение таблици
 

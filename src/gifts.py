@@ -223,7 +223,7 @@ class GiftParser:
                     await GiftParser.parsing_market(url)
 
     @staticmethod
-    async def run():
+    async def run() -> None:
         """
         Главная функция запускa
         парсинга NFT/gift

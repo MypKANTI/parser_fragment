@@ -114,7 +114,7 @@ class StarParser:
         return check_input("ваш выбор")
 
     @staticmethod
-    async def run():
+    async def run() -> None:
         endpoint = "stars"
         user_input = StarParser.banner_main_input()
 
