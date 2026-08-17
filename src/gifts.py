@@ -1,16 +1,16 @@
 import sys
 
-import aiohttp
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
 from src.config import Config
 from src.utils import (
-    Colors, 
-    generate_headers, 
-    hendler_error, 
-    status_color, 
-    replace_nft
+    ClintParser,
+    Colors,
+    generate_headers,
+    hendler_error,
+    replace_nft,
+    status_color,
 )
 
 
@@ -30,15 +30,7 @@ class GiftParser:
         Args:
             url (str): link парсинга
         """
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 url=url, headers=generate_headers()
             ) as resp:
@@ -158,15 +150,7 @@ class GiftParser:
             url (str): ссылку на ресурс для парсинга
             count (bool) показывать ли количество
         """
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 url=url, headers=generate_headers()
             ) as resp:
@@ -219,7 +203,9 @@ class GiftParser:
                 nft_name = dict_gift.get(user_input, Config.DEFAULT_STATUS)
 
                 if nft_name != Config.DEFAULT_STATUS:
-                    url = f"{url.replace('/gifts/', '')}{replace_nft(nft_name)}"
+                    url = (
+                        f"{url.replace('/gifts/', '')}{replace_nft(nft_name)}"
+                    )
                     await GiftParser.parsing_market(url)
 
     @staticmethod

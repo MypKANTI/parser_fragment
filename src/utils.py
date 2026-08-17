@@ -21,6 +21,7 @@ from src.config import Config
 @dataclass(frozen=True)
 class Colors:
     """Палитра цветов для текста"""
+
     RED = "\033[31m"  # красный
     GREEN = "\033[32m"  # зелёный
     BLUE = "\033[34m"  # синий
@@ -126,7 +127,7 @@ def replace_nft(text: str) -> str:
     Return:
         text (str): вернёт исправленую строку
     """
-    return text.lower().strip().translate(str.maketrans('', '', ' -’'))
+    return text.lower().strip().translate(str.maketrans("", "", " -’"))
 
 
 def status_color(status: str) -> str:
@@ -140,7 +141,7 @@ def status_color(status: str) -> str:
         status (str): статус юза
 
     Returns:
-        str: вернёт тоже статус но с перекрашеным 
+        str: вернёт тоже статус но с перекрашеным
         цветом взависимости от статуса
     """
 
@@ -238,6 +239,33 @@ def is_object(object: str, color: Callable) -> str:
         return Colors.RED + Config.DEFAULT_STATUS + Colors.RESET
 
 
+class ClintParser:
+    @staticmethod
+    def _timeout() -> aiohttp.ClientTimeout:
+        """настройка ClientTimeout"""
+        return aiohttp.ClientTimeout(
+            total=Config.TIMEOUT, connect=Config.TIMEOUT
+        )
+
+    @staticmethod
+    def _connector() -> aiohttp.TCPConnector:
+        """Настройка TCPConnector"""
+        return aiohttp.TCPConnector(
+            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
+        )
+
+    @staticmethod
+    def start() -> aiohttp.ClientSession:
+        """
+        создание нового aiohttp клиента
+        с настроенными параметрами
+        TCPConnector и ClientTimeout
+        """
+        return aiohttp.ClientSession(
+            connector=ClintParser._connector(), timeout=ClintParser._timeout()
+        )
+
+
 class GetInfoFull:
     """
     Класс для сбора информации с странифы
@@ -302,7 +330,9 @@ class GetInfoFull:
         # переходим по нужному пути
         try:
             main_ = self.soup.find("main", class_="tm-main js-main-content")
-            section = main_.find("section", class_="tm-section tm-auction-section")
+            section = main_.find(
+                "section", class_="tm-section tm-auction-section"
+            )
             div = section.find(
                 "div", class_="tm-section-box tm-section-bid-info"
             )
@@ -355,7 +385,7 @@ class GetInfoFull:
             section = main_content.find(
                 "section", class_="tm-section tm-auction-section"
             )
-        
+
             div = section.find(
                 "div", class_="tm-section-box tm-section-bid-info"
             )

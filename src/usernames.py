@@ -6,13 +6,13 @@ import sys
 from itertools import product
 from typing import Iterator
 
-import aiohttp
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
 from src.config import Config
 from src.numbers import NumberParser
 from src.utils import (
+    ClintParser,
     Colors,
     check_input,
     clear_screen,
@@ -231,20 +231,11 @@ class UsernameParser:
 
         end_link = check_input("")
 
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-
         if end_link in [1, 2, 3]:
-            end_link_ = UsernameParser.end_filter(end_link)
-            start_link_ = UsernameParser.end_sort(start_link)
-            url = f"{Config.URL_BASE}{start_link_}{end_link_}"
-            async with aiohttp.ClientSession(
-                timeout=timeout, connector=connector
-            ) as session:
+            end_link = UsernameParser.end_filter(end_link)
+            start_link = UsernameParser.end_sort(start_link)
+            url = f"{Config.URL_BASE}{start_link}{end_link}"
+            async with ClintParser.start() as session:
                 async with session.get(
                     url=url, headers=generate_headers()
                 ) as resp:
@@ -335,18 +326,9 @@ class UsernameParser:
             username (str): юз для проверки на марките
             is_exactly (bool): точное совпадение или нет
         """
-        username = username.lower()
+        username = username.lower().strip()
 
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 url=f"https://fragment.com/?query={username}",
                 headers=generate_headers(),
@@ -443,13 +425,7 @@ class UsernameParser:
         Return:
             status (str): статус юза
         """
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(total=Config.TIMEOUT)
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 url=f"https://fragment.com/?query={username}",
                 headers=generate_headers(),
@@ -513,16 +489,15 @@ class UsernameParser:
         Return:
             username (str): исправленный юз
         """
-        if username:
-            if username.startswith("http://t.me/"):
-                username = username.replace("http://t.me/", "")
-            elif username.startswith("https://t.me/"):
-                username = username.replace("https://t.me/", "")
-            elif username.startswith("t.me/"):
-                username = username.replace("t.me/", "")
-            elif username.startswith("@"):
-                username = username.replace("@", "")
-            return username
+        if username.startswith("http://t.me/"):
+            username = username.replace("http://t.me/", "")
+        elif username.startswith("https://t.me/"):
+            username = username.replace("https://t.me/", "")
+        elif username.startswith("t.me/"):
+            username = username.replace("t.me/", "")
+        elif username.startswith("@"):
+            username = username.replace("@", "")
+        return username
 
     @staticmethod
     def check_valid_username_local(username: str) -> bool:
@@ -539,9 +514,9 @@ class UsernameParser:
         try:
             username = username.lower().strip()
         except AttributeError:
-            logging.warning(f'юз {username} не может быть пустым')
+            logging.warning(f"юз {username} не может быть пустым")
             return False
-        
+
         # проверка на русские буквы
         if any(r_c in username for r_c in Config.ru_chars):
             logging.info("юз не может содержать русских букв")

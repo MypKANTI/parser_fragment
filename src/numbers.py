@@ -1,9 +1,9 @@
-import aiohttp
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
 from src.config import Config
 from src.utils import (
+    ClintParser,
     Colors,
     InfoFullPrint,
     check_input,
@@ -53,15 +53,7 @@ class NumberParser:
         """
         numder = input("плиз номер: ")
         print()
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 url=f"{Config.URL_BASE}{endpoint}?query={numder}",
                 headers=generate_headers(),
@@ -131,15 +123,7 @@ class NumberParser:
         Returns:
             str: статус номера в фрагменте
         """
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 f"{Config.URL_BASE}{endpoint}?query={number}",
                 headers=generate_headers(),
@@ -179,15 +163,7 @@ class NumberParser:
         Args:
             url (str): сылка для парсинга
         """
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 url=url, headers=generate_headers()
             ) as resp:
@@ -195,29 +171,29 @@ class NumberParser:
                 html = await resp.text()
                 soup = BeautifulSoup(html, Config.PARSER)
                 info_full_print = InfoFullPrint(soup)
-                
+
                 # получаем таблицы
                 status_and_ = info_full_print.status_and_()
                 deal_end_time = info_full_print.deal_end_time()
                 table_fixed = info_full_print.table_fixed()
                 table_0 = info_full_print.table(0)
                 table_1 = info_full_print.table(1)
-                
+
                 # вывоим информацию
                 # статус
                 if status_and_ is not None:
                     print(status_and_)
-                
-                #время до конца аукциона
+
+                # время до конца аукциона
                 if deal_end_time is not None:
                     print(deal_end_time)
-                    
+
                 if table_fixed is not None:
                     print(table_fixed)
-                    
+
                 if table_0 is not None:
                     print(table_0)
-                
+
                 if table_1 is not None:
                     print(table_1)
 
@@ -227,7 +203,7 @@ class NumberParser:
         user_input = NumberParser.banner_main_input()
 
         if user_input == 1:
-            number = input("Введите номер c (+888)")
+            number = input("Введите номер c (+888) ")
             status_number = await NumberParser.check_status_number_fragment(
                 number, endpoint=endpoint
             )

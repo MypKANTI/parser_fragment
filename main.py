@@ -25,11 +25,11 @@ from src.usernames import UsernameParser
 from src.utils import banner, check_input
 
 # создаём папку если её нету
-os.makedirs('logs', exist_ok=True)
+os.makedirs("logs", exist_ok=True)
 
 # определяем полный путь
 PATH = os.path.dirname(os.path.abspath(__file__))
-PATH_FILE_FULL = os.path.join(PATH, 'logs', "parser.log")
+PATH_FILE_FULL = os.path.join(PATH, "logs", "parser.log")
 
 logging.basicConfig(
     level=logging.ERROR,  # уровень логирование

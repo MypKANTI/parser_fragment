@@ -1,9 +1,9 @@
-import aiohttp
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
 from src.config import Config
 from src.utils import (
+    ClintParser,
     Colors,
     check_input,
     clear_screen,
@@ -40,15 +40,7 @@ class PremiumParser:
     @hendler_error
     async def telegram_premium_price(endpoint: str) -> None:
         """получаем прайс и прочию информацию о тг премиум для себя"""
-        timeout = aiohttp.ClientTimeout(
-            total=Config.TIMEOUT, connect=Config.TIMEOUT
-        )
-        connector = aiohttp.TCPConnector(
-            limit=Config.TCP_LIMIT, limit_per_host=Config.LIMIT_PER
-        )
-        async with aiohttp.ClientSession(
-            connector=connector, timeout=timeout
-        ) as session:
+        async with ClintParser.start() as session:
             async with session.get(
                 url=f"{Config.URL_BASE}premium/{endpoint}",
                 headers=generate_headers(),
