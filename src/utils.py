@@ -116,6 +116,19 @@ def check_input(text: str) -> int:
             sys.exit(1)
 
 
+def replace_nft(text: str) -> str:
+    """
+    Функция для удаления лишних симвулом таких как ( -’)
+
+    Args:
+        text (str): строка для проверки
+
+    Return:
+        text (str): вернёт исправленую строку
+    """
+    return text.lower().strip().translate(str.maketrans('', '', ' -’'))
+
+
 def status_color(status: str) -> str:
     """
     перекрашиваем статус в зависимости от его статуса
@@ -127,7 +140,8 @@ def status_color(status: str) -> str:
         status (str): статус юза
 
     Returns:
-        str: статус с цветом
+        str: вернёт тоже статус но с перекрашеным 
+        цветом взависимости от статуса
     """
 
     if status == "Unavailable":

@@ -5,7 +5,13 @@ from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
 from src.config import Config
-from src.utils import Colors, generate_headers, hendler_error, status_color
+from src.utils import (
+    Colors, 
+    generate_headers, 
+    hendler_error, 
+    status_color, 
+    replace_nft
+)
 
 
 class GiftParser:
@@ -141,32 +147,6 @@ class GiftParser:
 
                 print(table)
 
-    def replace_nft(text: str) -> str:
-        """
-        Функция для удаления лишних симвулов
-        с названия gift/NFT по сути replace
-        но чтобы не повторяться ну DYR
-
-        Args:
-            text (str): текст для проверки
-
-        Returns:
-            str: исправленный текст
-        """
-        # поправляем текст и переводим в удобный формат
-        text = text.lower()
-        text = text.strip()
-
-        nft_fix = ""  # исправленный текст
-
-        for nft in text:
-            if nft in [" ", "-", "’"]:
-                continue
-            else:
-                nft_fix += nft
-
-        return nft_fix
-
     @staticmethod
     @hendler_error
     async def get_list_gifts(url: str, count: bool = False) -> None:
@@ -239,9 +219,7 @@ class GiftParser:
                 nft_name = dict_gift.get(user_input, Config.DEFAULT_STATUS)
 
                 if nft_name != Config.DEFAULT_STATUS:
-                    # убираем лишние симвулы
-                    nft_name = GiftParser.replace_nft(nft_name)
-                    url = f"{url.replace('/gifts/', '')}{nft_name}"
+                    url = f"{url.replace('/gifts/', '')}{replace_nft(nft_name)}"
                     await GiftParser.parsing_market(url)
 
     @staticmethod
