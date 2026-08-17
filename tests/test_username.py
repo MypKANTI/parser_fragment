@@ -1,53 +1,37 @@
+import pytest
+
 from src.usernames import UsernameParser
 
 
-def test_check_valid_username_local():
-    """тест функции check_valid_username_local"""
-    assert (
-        UsernameParser.check_valid_username_local("usernameл") is False
-    )  # Проверка с рускими буквами
+@pytest.mark.parametrize(
+    "username, status",
+    [
+        ("usernameл", False),  # Проверка с рускими буквами
+        ("username*", False),  # Проверка на спец симвулы
+        ("u sername", False),  # Проверка на пробелы
+        ("1username", False),  # Проверка цифра в начале
+        ("_username", False),  # Проверка есть ли в начале _
+        ("username_", False),  # Проверка есть ли в конце _
+        ("u" * 33, False),  # Проверка на привышения симвулов
+        ("usr", False),  # Проверка если менише 4 симвула
+        ("username", True),  # Проверка на валидный юзернейм
+        ("Username", True),  # Проверка на валидный юзернейм с большой буквы
+        ("UsErNaMe", True),  # test на валидность юз заглавные буквами
+        ("@username", True),  # Проверка на валидный юзернейм начинающийся с @
+        (
+            "username123",
+            True
+        ),  # Проверка на валидный юзернейм который содержит цифры в конце
+    ],
+)
+def test_check_valid_username_local(username, status):
+    """
+    тест функции check_valid_username_local
 
-    assert (
-        UsernameParser.check_valid_username_local("username*") is False
-    )  # Проверка на спец симвулы
+    Args:
+        (str) username: юзернейм для тестов
+        (bool) status: вернёт True если юзерней соотвествует 
+        правилам сотавления юза telegram иначе вернёт False
 
-    assert (
-        UsernameParser.check_valid_username_local("u sername") is False
-    )  # Провека на пробелы
-
-    assert (
-        UsernameParser.check_valid_username_local("1username") is False
-    )  # Проверка цифра в начале
-
-    assert (
-        UsernameParser.check_valid_username_local("_username") is False
-    )  # Проверка есть ли в начале _
-
-    assert (
-        UsernameParser.check_valid_username_local("username_") is False
-    )  # Проверка есть ли в конце _
-
-    assert (
-        UsernameParser.check_valid_username_local("usr") is False
-    )  # Проверка если менише 4 симвула
-
-    assert (
-        UsernameParser.check_valid_username_local("u" * 33) is False
-    )  # Проверка на привышения
-    
-    assert (
-        UsernameParser.check_valid_username_local("username") is True
-    )  # Проверка на валидный юзернейм
-    
-    assert (
-        UsernameParser.check_valid_username_local("Username") is True
-    )  # Проверка на валидный юзернейм с большой буквы
-    
-    assert (
-        UsernameParser.check_valid_username_local("@username") is True
-    )  # Проверка на валидный юзернейм который начинаеться с @
-    
-    assert (
-        UsernameParser.check_valid_username_local("username123") is True
-    )  # Проверка на валидный юзернейм который содержит цифры в конце
-
+    """
+    assert UsernameParser.check_valid_username_local(username) is status
