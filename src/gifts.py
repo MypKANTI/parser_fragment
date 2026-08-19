@@ -5,7 +5,7 @@ from prettytable import PrettyTable
 
 from src.config import Config
 from src.utils import (
-    ClintParser,
+    ClientParser,
     Colors,
     generate_headers,
     hendler_error,
@@ -30,7 +30,7 @@ class GiftParser:
         Args:
             url (str): link парсинга
         """
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=url, headers=generate_headers()
             ) as resp:
@@ -150,7 +150,7 @@ class GiftParser:
             url (str): ссылку на ресурс для парсинга
             count (bool) показывать ли количество
         """
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=url, headers=generate_headers()
             ) as resp:

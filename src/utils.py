@@ -198,6 +198,9 @@ def hendler_error(func):
         except aiohttp.ServerDisconnectedError as e:
             logging.error(f"{e}")
             return e
+        except ConnectionResetError as e:
+            logging.error(e)      
+            return e
         except aiohttp.ClientError as e:
             logging.error(f"{e}")
             return e
@@ -239,7 +242,7 @@ def is_object(object: str, color: Callable) -> str:
         return Colors.RED + Config.DEFAULT_STATUS + Colors.RESET
 
 
-class ClintParser:
+class ClientParser:
     @staticmethod
     def _timeout() -> aiohttp.ClientTimeout:
         """настройка ClientTimeout"""
@@ -262,7 +265,7 @@ class ClintParser:
         TCPConnector и ClientTimeout
         """
         return aiohttp.ClientSession(
-            connector=ClintParser._connector(), timeout=ClintParser._timeout()
+            connector=ClientParser._connector(), timeout=ClientParser._timeout()
         )
 
 

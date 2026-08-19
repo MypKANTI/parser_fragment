@@ -3,7 +3,7 @@ from prettytable import PrettyTable
 
 from src.config import Config
 from src.utils import (
-    ClintParser,
+    ClientParser,
     Colors,
     InfoFullPrint,
     check_input,
@@ -53,7 +53,7 @@ class NumberParser:
         """
         numder = input("плиз номер: ")
         print()
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=f"{Config.URL_BASE}{endpoint}?query={numder}",
                 headers=generate_headers(),
@@ -123,7 +123,7 @@ class NumberParser:
         Returns:
             str: статус номера в фрагменте
         """
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 f"{Config.URL_BASE}{endpoint}?query={number}",
                 headers=generate_headers(),
@@ -163,7 +163,7 @@ class NumberParser:
         Args:
             url (str): сылка для парсинга
         """
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=url, headers=generate_headers()
             ) as resp:

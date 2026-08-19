@@ -3,7 +3,7 @@ from prettytable import PrettyTable
 
 from src.config import Config
 from src.utils import (
-    ClintParser,
+    ClientParser,
     Colors,
     check_input,
     clear_screen,
@@ -40,7 +40,7 @@ class PremiumParser:
     @hendler_error
     async def telegram_premium_price(endpoint: str) -> None:
         """получаем прайс и прочию информацию о тг премиум для себя"""
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=f"{Config.URL_BASE}premium/{endpoint}",
                 headers=generate_headers(),

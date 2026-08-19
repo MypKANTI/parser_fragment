@@ -3,7 +3,7 @@ from prettytable import PrettyTable
 
 from src.config import Config
 from src.utils import (
-    ClintParser,
+    ClientParser,
     Colors,
     check_input,
     clear_screen,
@@ -23,7 +23,7 @@ class StarParser:
         Args:
             explanation (bool): включить пояснение?. Defaults to False.
         """
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=f"{Config.URL_BASE}{endpoint}", headers=generate_headers()
             ) as resp:

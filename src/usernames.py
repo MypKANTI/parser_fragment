@@ -12,7 +12,7 @@ from prettytable import PrettyTable
 from src.config import Config
 from src.numbers import NumberParser
 from src.utils import (
-    ClintParser,
+    ClientParser,
     Colors,
     check_input,
     clear_screen,
@@ -235,7 +235,7 @@ class UsernameParser:
             end_link = UsernameParser.end_filter(end_link)
             start_link = UsernameParser.end_sort(start_link)
             url = f"{Config.URL_BASE}{start_link}{end_link}"
-            async with ClintParser.start() as session:
+            async with ClientParser.start() as session:
                 async with session.get(
                     url=url, headers=generate_headers()
                 ) as resp:
@@ -328,7 +328,7 @@ class UsernameParser:
         """
         username = username.lower().strip()
 
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=f"https://fragment.com/?query={username}",
                 headers=generate_headers(),
@@ -425,7 +425,7 @@ class UsernameParser:
         Return:
             status (str): статус юза
         """
-        async with ClintParser.start() as session:
+        async with ClientParser.start() as session:
             async with session.get(
                 url=f"https://fragment.com/?query={username}",
                 headers=generate_headers(),
