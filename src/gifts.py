@@ -1,5 +1,5 @@
-import sys
 import logging
+import sys
 
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
