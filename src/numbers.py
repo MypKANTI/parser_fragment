@@ -1,3 +1,5 @@
+import logging
+
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
@@ -59,57 +61,82 @@ class NumberParser:
                 headers=generate_headers(),
             ) as resp:
                 resp.raise_for_status()
-                html = await resp.text()
-                soup = BeautifulSoup(html, Config.PARSER)
-                pars0 = soup.find_all("tr", class_="tm-row-selectable")
+                content = resp.headers.get("content-type", "").strip().lower()
+                if content:
+                    if content.startswith("text/html"):
+                        html = await resp.text()
+                        soup = BeautifulSoup(html, Config.PARSER)
+                        pars0 = soup.find_all("tr", class_="tm-row-selectable")
 
-                table = PrettyTable()  # для создании таблиц
+                        table = PrettyTable()  # для создании таблиц
 
-                for blok in pars0:
-                    numder_ = blok.find(
-                        "div", class_="table-cell-value tm-value"
-                    )
-                    icon_ton = "table-cell-value tm-value icon-before icon-ton"
-                    ton = blok.find(
-                        "div",
-                        class_=icon_ton,
-                    )
-                    status = blok.find(
-                        "div",
-                        class_="table-cell-value tm-value tm-status-avail",
-                    )
-                    time = blok.find("div", class_="tm-timer")
+                        for blok in pars0:
+                            numder_ = blok.find(
+                                "div", class_="table-cell-value tm-value"
+                            )
+                            icon_ton = [
+                                "table-cell-value",
+                                "tm-value",
+                                "icon-before",
+                                "icon-ton"
+                            ]
+                            ton = blok.find(
+                                "div",
+                                class_=" ".join(icon_ton)
+                            )
+                            status_avail = [
+                                "table-cell-value",
+                                "tm-value",
+                                "tm-status-avail",
+                            ]
+                            status = blok.find(
+                                "div",
+                                class_=" ".join(status_avail),
+                            )
+                            time = blok.find("div", class_="tm-timer")
 
-                    if status is None:
-                        unavail = "table-cell-value tm-value tm-status-unavail"
-                        status = blok.find(
-                            "div",
-                            class_=unavail,
+                            if status is None:
+                                status_unavail = [
+                                    "table-cell-value",
+                                    "tm-value",
+                                    "tm-status-unavail",
+                                ]
+                                status = blok.find(
+                                    "div",
+                                    class_=" ".join(status_unavail),
+                                )
+
+                            numder_ = is_object(numder_, Colors.GAY)
+                            ton = is_object(ton, Colors.BLUE)
+                            time = is_object(time, Colors.YELLOW)
+
+                            status = (
+                                status.text
+                                if status is not None
+                                else Config.DEFAULT_STATUS
+                            )
+
+                            if not is_exactly and ton:
+                                ton = ton.split(",")[0]
+
+                            table.field_names = [
+                                Colors.GAY + "Numder" + Colors.RESET,
+                                Colors.BLUE + "Ton" + Colors.RESET,
+                                Colors.GREEN + "Status" + Colors.RESET,
+                                Colors.YELLOW + "Time-Data" + Colors.RESET,
+                            ]
+
+                            table.add_row(
+                                [numder_, ton, status_color(status), time]
+                            )
+
+                        print(table)
+                    else:
+                        logging.error(
+                            "content-type не текст не могу обработать"
                         )
-
-                    numder_ = is_object(numder_, Colors.GAY)
-                    ton = is_object(ton, Colors.BLUE)
-                    time = is_object(time, Colors.YELLOW)
-
-                    status = (
-                        status.text
-                        if status is not None
-                        else Config.DEFAULT_STATUS
-                    )
-
-                    if not is_exactly and ton:
-                        ton = ton.split(",")[0]
-
-                    table.field_names = [
-                        Colors.GAY + "Numder" + Colors.RESET,
-                        Colors.BLUE + "Ton" + Colors.RESET,
-                        Colors.GREEN + "Status" + Colors.RESET,
-                        Colors.YELLOW + "Time-Data" + Colors.RESET,
-                    ]
-
-                    table.add_row([numder_, ton, status_color(status), time])
-
-                print(table)
+                else:
+                    logging.error("несмог извлечь content-type")
 
     @staticmethod
     @hendler_error
@@ -168,34 +195,43 @@ class NumberParser:
                 url=url, headers=generate_headers()
             ) as resp:
                 resp.raise_for_status()
-                html = await resp.text()
-                soup = BeautifulSoup(html, Config.PARSER)
-                info_full_print = InfoFullPrint(soup)
+                content = resp.headers.get("content-type", "").strip().lower()
+                if content:
+                    if content.startswith("text/html"):
+                        html = await resp.text()
+                        soup = BeautifulSoup(html, Config.PARSER)
+                        info_full_print = InfoFullPrint(soup)
 
-                # получаем таблицы
-                status_and_ = info_full_print.status_and_()
-                deal_end_time = info_full_print.deal_end_time()
-                table_fixed = info_full_print.table_fixed()
-                table_0 = info_full_print.table(0)
-                table_1 = info_full_print.table(1)
+                        # получаем таблицы
+                        status_and_ = info_full_print.status_and_()
+                        deal_end_time = info_full_print.deal_end_time()
+                        table_fixed = info_full_print.table_fixed()
+                        table_0 = info_full_print.table(0)
+                        table_1 = info_full_print.table(1)
 
-                # вывоим информацию
-                # статус
-                if status_and_ is not None:
-                    print(status_and_)
+                        # вывоим информацию
+                        # статус
+                        if status_and_ is not None:
+                            print(status_and_)
 
-                # время до конца аукциона
-                if deal_end_time is not None:
-                    print(deal_end_time)
+                        # время до конца аукциона
+                        if deal_end_time is not None:
+                            print(deal_end_time)
 
-                if table_fixed is not None:
-                    print(table_fixed)
+                        if table_fixed is not None:
+                            print(table_fixed)
 
-                if table_0 is not None:
-                    print(table_0)
+                        if table_0 is not None:
+                            print(table_0)
 
-                if table_1 is not None:
-                    print(table_1)
+                        if table_1 is not None:
+                            print(table_1)
+                    else:
+                        logging.error(
+                            f"не могу работать с Content-type: {content}"
+                        )
+                else:
+                    logging.error("не смог найти Content-type")
 
     @staticmethod
     async def run() -> None:

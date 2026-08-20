@@ -44,9 +44,17 @@ def generate_headers() -> dict:
     fake = Faker()  # для генерации юзерагентов
 
     random_accept = random.choice(
-        ["*/*", "text/html, */*;q=0.8", "text/plain, */*;q=0.9"]
+        [
+            "*/*",
+            "text/html, */*;q=0.8",
+            "text/plain, */*;q=0.9",
+            "text/html, */*;q=0.7",
+            "application/xhtml+xml",
+            "application/xml;q=0.9,*/*;q=0.8",
+        ]
     )
     headers = {
+        "Connection": "keep-alive",
         "Accept": random_accept,
         "User-Agent": fake.user_agent(),
     }
@@ -199,7 +207,7 @@ def hendler_error(func):
             logging.error(f"{e}")
             return e
         except ConnectionResetError as e:
-            logging.error(e)      
+            logging.error(e)
             return e
         except aiohttp.ClientError as e:
             logging.error(f"{e}")
@@ -265,7 +273,8 @@ class ClientParser:
         TCPConnector и ClientTimeout
         """
         return aiohttp.ClientSession(
-            connector=ClientParser._connector(), timeout=ClientParser._timeout()
+            connector=ClientParser._connector(),
+            timeout=ClientParser._timeout(),
         )
 
 

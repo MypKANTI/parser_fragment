@@ -240,79 +240,114 @@ class UsernameParser:
                     url=url, headers=generate_headers()
                 ) as resp:
                     resp.raise_for_status()
-                    html = await resp.text()
-                    soup = BeautifulSoup(html, Config.PARSER)
-                    pars0 = soup.find_all("tr", class_="tm-row-selectable")
-
-                    table = PrettyTable()
-
-                    for blok in pars0:
-                        username = blok.find(
-                            "div", class_="table-cell-value tm-value"
-                        ).text  # Получаем юз типа @feds
-                        status = blok.find(
-                            "div",
-                            class_="table-cell-value tm-value tm-status-avail",
-                        )  # Получаем статус например Resale
-                        dollar = blok.find(
-                            "div", "table-cell-desc wide-only"
-                        )  # получаем стоймость в $ типа 23,665
-                        time_data = blok.find(
-                            "div", "tm-timer"
-                        )  # Получить время окончание рынк
-                        t = "table-cell-value tm-value icon-before icon-ton"
-                        ton = blok.find(
-                            "div",
-                            class_=t,
-                        )
-
-                        if status is None:
-                            tm_ = "table-cell-value tm-value tm-status-unavail"
-                            status = blok.find(
-                                "div",
-                                class_=tm_,
-                            )
-                        if status is None:
-                            status = blok.find(
-                                "div", class_="table-cell-status-thin"
-                            )
-                        if status is None:
-                            tm_s = "table-cell-value tm-value tm-status-taken"
-                            status = blok.find(
-                                "div",
-                                class_=tm_s,
+                    content = (
+                        resp.headers.get("content-type", "").strip().lower()
+                    )
+                    if content:
+                        if content.startswith("text/html"):
+                            html = await resp.text()
+                            soup = BeautifulSoup(html, Config.PARSER)
+                            pars0 = soup.find_all(
+                                "tr", class_="tm-row-selectable"
                             )
 
-                        ton = is_object(ton, Colors.BLUE)
-                        dollar = is_object(dollar, Colors.GREEN)
-                        time_data = is_object(time_data, Colors.YELLOW)
+                            table = PrettyTable()
 
-                        status = status.text if status is not None else "нет"
-                        username = (
-                            Colors.GAY + username + Colors.RESET
-                            if username is not None
-                            else Colors.RED + "нет" + Colors.RESET
-                        )
+                            for blok in pars0:
+                                username = blok.find(
+                                    "div", class_="table-cell-value tm-value"
+                                ).text  # Получаем юз типа @feds
+                                status_avail = [
+                                    "table-cell-value",
+                                    "tm-value",
+                                    "tm-status-avail",
+                                ]
+                                status = blok.find(
+                                    "div",
+                                    class_=" ".join(status_avail),
+                                )  # Получаем статус например Resale
+                                dollar = blok.find(
+                                    "div", "table-cell-desc wide-only"
+                                )  # получаем стоймость в $ типа 23,665
+                                time_data = blok.find(
+                                    "div", "tm-timer"
+                                )  # Получить время окончание рынк
+                                icon_ton = [
+                                    "table-cell-value",
+                                    "tm-value",
+                                    "icon-before",
+                                    "icon-ton",
+                                ]
+                                ton = blok.find(
+                                    "div",
+                                    class_=" ".join(icon_ton),
+                                )
 
-                        table.field_names = [
-                            Colors.GAY + "username" + Colors.RESET,
-                            Colors.GREEN + "status" + Colors.RESET,
-                            Colors.GREEN + "$" + Colors.RESET,
-                            Colors.BLUE + "ton" + Colors.RESET,
-                            Colors.YELLOW + "time-data" + Colors.RESET,
-                        ]
+                                if status is None:
+                                    status_unavail = [
+                                        "table-cell-value",
+                                        "tm-value",
+                                        "tm-status-unavail",
+                                    ]
+                                    status = blok.find(
+                                        "div",
+                                        class_=" ".join(status_unavail),
+                                    )
+                                if status is None:
+                                    status = blok.find(
+                                        "div", class_="table-cell-status-thin"
+                                    )
+                                if status is None:
+                                    status_taken = [
+                                        "table-cell-value",
+                                        "tm-value",
+                                        "tm-status-taken",
+                                    ]
+                                    status = blok.find(
+                                        "div",
+                                        class_=" ".join(status_taken),
+                                    )
 
-                        table.add_row(
-                            [
-                                username,
-                                status_color(status),
-                                dollar,
-                                ton,
-                                time_data,
-                            ]
-                        )
+                                ton = is_object(ton, Colors.BLUE)
+                                dollar = is_object(dollar, Colors.GREEN)
+                                time_data = is_object(time_data, Colors.YELLOW)
 
-                    print(table)
+                                status = (
+                                    status.text
+                                    if status is not None
+                                    else "нет"
+                                )
+                                username = (
+                                    Colors.GAY + username + Colors.RESET
+                                    if username is not None
+                                    else Colors.RED + "нет" + Colors.RESET
+                                )
+
+                                table.field_names = [
+                                    Colors.GAY + "username" + Colors.RESET,
+                                    Colors.GREEN + "status" + Colors.RESET,
+                                    Colors.GREEN + "$" + Colors.RESET,
+                                    Colors.BLUE + "ton" + Colors.RESET,
+                                    Colors.YELLOW + "time-data" + Colors.RESET,
+                                ]
+
+                                table.add_row(
+                                    [
+                                        username,
+                                        status_color(status),
+                                        dollar,
+                                        ton,
+                                        time_data,
+                                    ]
+                                )
+
+                            print(table)
+                        else:
+                            logging.error(
+                                "content-type не текст не могу обработать"
+                            )
+                    else:
+                        logging.error("несмог извлечь content-type")
         else:
             print(f"такой флаг не предусмотрен {end_link}")
 
@@ -333,85 +368,117 @@ class UsernameParser:
                 url=f"https://fragment.com/?query={username}",
                 headers=generate_headers(),
             ) as resp:
-                html = await resp.text()
-                soup = BeautifulSoup(html, Config.PARSER)
+                content = resp.headers.get("content-type", "").strip().lower()
+                if content:
+                    if content.startswith("text/html"):
+                        html = await resp.text()
+                        soup = BeautifulSoup(html, Config.PARSER)
 
-                bloks = soup.find_all("tr", class_="tm-row-selectable")
+                        bloks = soup.find_all("tr", class_="tm-row-selectable")
 
-                table = PrettyTable()
+                        table = PrettyTable()
 
-                print()
+                        print()
 
-                for blok in bloks:
-                    get_username = blok.find(
-                        "div", class_="table-cell-value tm-value"
-                    )
-                    i_t = "table-cell-value tm-value icon-before icon-ton"
-                    ton = blok.find(
-                        "div",
-                        class_=i_t,
-                    )
-                    status = blok.find(
-                        "div",
-                        class_="table-cell-value tm-value tm-status-avail",
-                    )
+                        for blok in bloks:
+                            get_username = blok.find(
+                                "div", class_="table-cell-value tm-value"
+                            )
+                            icon_ton = [
+                                "table-cell-value",
+                                "tm-value",
+                                "icon-before",
+                                "icon-ton",
+                            ]
+                            ton = blok.find(
+                                "div",
+                                class_=" ".join(icon_ton),
+                            )
+                            status_avail = [
+                                "table-cell-value",
+                                "tm-value",
+                                "tm-status-avail",
+                            ]
+                            status = blok.find(
+                                "div",
+                                class_=" ".join(status_avail),
+                            )
 
-                    if status is None:
-                        tm_s = "table-cell-value tm-value tm-status-unavail"
-                        status = blok.find(
-                            "div",
-                            class_=tm_s,
-                        )
-                    if status is None:
-                        status = blok.find(
-                            "div", class_="table-cell-status-thin"
-                        )
+                            if status is None:
+                                status_unavail = [
+                                    "table-cell-value",
+                                    "tm-value",
+                                    "tm-status-unavail",
+                                ]
+                                status = blok.find(
+                                    "div",
+                                    class_=" ".join(status_unavail),
+                                )
+                            if status is None:
+                                status = blok.find(
+                                    "div", class_="table-cell-status-thin"
+                                )
 
-                    if status is None:
-                        status = blok.find(
-                            "div",
-                            class_="table-cell-value tm-value tm-status-taken",
-                        )
+                            if status is None:
+                                status_taken = [
+                                    "table-cell-value",
+                                    "tm-value",
+                                    "tm-status-taken",
+                                ]
+                                status = blok.find(
+                                    "div",
+                                    class_=" ".join(status_taken),
+                                )
 
-                    username_ = (
-                        get_username.text
-                        if get_username is not None
-                        else Config.DEFAULT_STATUS
-                    )
-                    ton = (
-                        Colors.BLUE + ton.text + Colors.RESET
-                        if ton is not None
-                        else Colors.RED + Config.DEFAULT_STATUS + Colors.RESET
-                    )
-                    status = (
-                        status.text
-                        if status is not None
-                        else Config.DEFAULT_STATUS
-                    )
+                            username_ = (
+                                get_username.text
+                                if get_username is not None
+                                else Config.DEFAULT_STATUS
+                            )
+                            ton = (
+                                Colors.BLUE + ton.text + Colors.RESET
+                                if ton is not None
+                                else Colors.RED
+                                + Config.DEFAULT_STATUS
+                                + Colors.RESET
+                            )
+                            status = (
+                                status.text
+                                if status is not None
+                                else Config.DEFAULT_STATUS
+                            )
 
-                    table.field_names = [
-                        Colors.GAY + "username" + Colors.RESET,
-                        Colors.BLUE + "ton" + Colors.RESET,
-                        Colors.GREEN + "status" + Colors.RESET,
-                    ]
+                            table.field_names = [
+                                Colors.GAY + "username" + Colors.RESET,
+                                Colors.BLUE + "ton" + Colors.RESET,
+                                Colors.GREEN + "status" + Colors.RESET,
+                            ]
 
-                    # точное совпадение
-                    if is_exactly:
-                        username_ = (
-                            Colors.GAY + username_ + Colors.RESET
-                            if username_.replace("@", "") == username
-                            else Config.DEFAULT_STATUS
-                        )
+                            # точное совпадение
+                            if is_exactly:
+                                username_ = (
+                                    Colors.GAY + username_ + Colors.RESET
+                                    if username_.replace("@", "") == username
+                                    else Config.DEFAULT_STATUS
+                                )
 
-                    table.add_row([username_, ton, status_color(status)])
+                            table.add_row(
+                                [username_, ton, status_color(status)]
+                            )
 
-                    # прерывание если решим поиска точный
-                    if is_exactly:
+                            # прерывание если решим поиска точный
+                            if is_exactly:
+                                print(table)
+                                input("\nplease enter: ")
+                                break
+
                         print(table)
-                        input("\nplease enter: ")
-                        break
-
-                print(table)
+                    else:
+                        logging.error(
+                            "content-type не текст не могу обработать"
+                        )
+                else:
+                    logging.error("несмог извлечь content-type")
 
     @staticmethod
     @hendler_error
@@ -431,51 +498,77 @@ class UsernameParser:
                 headers=generate_headers(),
             ) as resp:
                 resp.raise_for_status()
-                html = await resp.text()
-                soup = BeautifulSoup(html, Config.PARSER)
+                content = resp.headers.get("content-type", "").strip().lower()
+                if content:
+                    if content.startswith("text/html"):
+                        html = await resp.text()
+                        soup = BeautifulSoup(html, Config.PARSER)
 
-                bloks = soup.find_all("tr", class_="tm-row-selectable")
+                        bloks = soup.find_all("tr", class_="tm-row-selectable")
 
-                for blok in bloks:
-                    status = blok.find(
-                        "div",
-                        class_="table-cell-value tm-value tm-status-avail",
-                    )
+                        for blok in bloks:
+                            status_avail = [
+                                "table-cell-value",
+                                "tm-value",
+                                "tm-status-avail",
+                            ]
+                            status = blok.find(
+                                "div",
+                                class_=" ".join(status_avail),
+                            )
 
-                    if status is None:
-                        tm_s = "table-cell-value tm-value tm-status-unavail"
-                        status = blok.find(
-                            "div",
-                            class_=tm_s,
+                            if status is None:
+                                status_unavail = [
+                                    "table-cell-value",
+                                    "tm-value",
+                                    "tm-status-unavail",
+                                ]
+                                status = blok.find(
+                                    "div",
+                                    class_=" ".join(status_unavail),
+                                )
+                            if status is None:
+                                status = blok.find(
+                                    "div", class_="table-cell-status-thin"
+                                )
+
+                            if status is None:
+                                status_taken = [
+                                    "table-cell-value",
+                                    "tm-value",
+                                    "tm-status-taken",
+                                ]
+                                status = blok.find(
+                                    "div",
+                                    class_=" ".join(status_taken),
+                                )
+                            if status is None:
+                                status_unavail = [
+                                    "tm-section-header-status"
+                                    "tm-status-unavail"
+                                ]
+                                status = blok.find(
+                                    "div",
+                                    class_=" ".join(status_unavail),
+                                )
+
+                            status = (
+                                status.text
+                                if status is not None
+                                else Config.DEFAULT_STATUS
+                            )
+
+                            await asyncio.sleep(
+                                Config.RESPONSE_TIME
+                            )  # искуственная задежка между запросами
+
+                            return status
+                    else:
+                        logging.error(
+                            "content-type не текст не могу обработать"
                         )
-                    if status is None:
-                        status = blok.find(
-                            "div", class_="table-cell-status-thin"
-                        )
-
-                    if status is None:
-                        status = blok.find(
-                            "div",
-                            class_="table-cell-value tm-value tm-status-taken",
-                        )
-                    if status is None:
-                        tm_s = "tm-section-header-status tm-status-unavail"
-                        status = blok.find(
-                            "div",
-                            class_=tm_s,
-                        )
-
-                    status = (
-                        status.text
-                        if status is not None
-                        else Config.DEFAULT_STATUS
-                    )
-
-                    await asyncio.sleep(
-                        Config.RESPONSE_TIME
-                    )  # искуственная задежка между запросами
-
-                    return status
+                else:
+                    logging.error("несмог извлечь content-type")
 
     @staticmethod
     def check_start_username(username: str) -> None:

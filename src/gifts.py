@@ -1,4 +1,5 @@
 import sys
+import logging
 
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
@@ -35,109 +36,135 @@ class GiftParser:
                 url=url, headers=generate_headers()
             ) as resp:
                 resp.raise_for_status()
-                html = await resp.text()
-                soup = BeautifulSoup(html, Config.PARSER)
+                content = resp.headers.get("content-type", "").lower().strip()
+                if content:
+                    if content.startswith("text/html"):
+                        html = await resp.text()
+                        soup = BeautifulSoup(html, Config.PARSER)
 
-                # переходим по пути
-                main = soup.find("main", class_="tm-main tm-main-catalog")
-                div_wrap = main.find("div", class_="tm-main-catalog-wrap")
-                div_content = div_wrap.find(
-                    "div", class_="tm-main-catalog-content"
-                )
-                section_results = div_content.find(
-                    "section", class_="tm-section clearfix js-search-results"
-                )
-                div_autoscrollable = section_results.find(
-                    "div", class_="tm-catalog-grid-wrap js-autoscrollable"
-                )
-                div_body = div_autoscrollable.find(
-                    "div", class_="tm-catalog-grid js-autoscroll-body"
-                )
-
-                # получаем список NFT
-                gifts = div_body.find_all("a", class_="tm-grid-item")
-
-                table = PrettyTable()
-
-                # бежим по gifts
-                for gifts in gifts:
-                    div_content = gifts.find(
-                        "div", class_="tm-grid-item-content"
-                    )
-
-                    # парсим блок name and num
-                    num_name = div_content.find(
-                        "div", class_="tm-grid-item-name wide-only"
-                    )
-                    span_name = num_name.find(
-                        "span", class_="item-name"
-                    )  # пример Artisan Brick
-                    span_num = num_name.find(
-                        "span", class_="item-num"
-                    )  # пример  #2178
-
-                    # парсим дату
-                    data = div_content.find(
-                        "div", class_="tm-grid-item-desc wide-only"
-                    )
-                    time_data = data.find(
-                        "time", class_="short"
-                    )  # Jul 24, 2025 at 21:43
-
-                    # парсим статус и цену в ton
-                    ton_status = div_content.find(
-                        "div", class_="tm-grid-item-values"
-                    )
-                    # вынес иза привышение 79 симвулов
-                    t = "tm-grid-item-value tm-value icon-before icon-ton"
-                    div_ton = ton_status.find(
-                        "div",
-                        class_=t,
-                    )  # 30,000
-                    div_status = ton_status.find(
-                        "div", class_="tm-grid-item-status tm-status-unavail"
-                    )  # Sold
-                    # проверка на avail статус
-                    if div_status is None:
-                        div_status = ton_status.find(
-                            "div", class_="tm-grid-item-status tm-status-avail"
+                        # переходим по пути
+                        main = soup.find(
+                            "main", class_="tm-main tm-main-catalog"
+                        )
+                        div_wrap = main.find(
+                            "div", class_="tm-main-catalog-wrap"
+                        )
+                        div_content = div_wrap.find(
+                            "div", class_="tm-main-catalog-content"
+                        )
+                        section_results = div_content.find(
+                            "section",
+                            class_="tm-section clearfix js-search-results",
+                        )
+                        div_autoscrollable = section_results.find(
+                            "div",
+                            class_="tm-catalog-grid-wrap js-autoscrollable",
+                        )
+                        div_body = div_autoscrollable.find(
+                            "div", class_="tm-catalog-grid js-autoscroll-body"
                         )
 
-                    # поправляем формат
-                    if span_name is not None:
-                        span_name = span_name.text  # name NFT
+                        # получаем список NFT
+                        gifts = div_body.find_all("a", class_="tm-grid-item")
 
-                    if span_num is not None:
-                        span_num = span_num.text  # NFT num
+                        table = PrettyTable()
 
-                    if time_data is not None:
-                        time_data = time_data.text  # Дата и время
+                        # бежим по gifts
+                        for gifts in gifts:
+                            div_content = gifts.find(
+                                "div", class_="tm-grid-item-content"
+                            )
 
-                    if div_ton is not None:
-                        div_ton = div_ton.text  # цена в TON
+                            # парсим блок name and num
+                            num_name = div_content.find(
+                                "div", class_="tm-grid-item-name wide-only"
+                            )
+                            span_name = num_name.find(
+                                "span", class_="item-name"
+                            )  # пример Artisan Brick
+                            span_num = num_name.find(
+                                "span", class_="item-num"
+                            )  # пример  #2178
 
-                    # получаем статусы типа sold, for sale, on auc
-                    if div_status is not None:
-                        div_status = div_status.text
+                            # парсим дату
+                            data = div_content.find(
+                                "div", class_="tm-grid-item-desc wide-only"
+                            )
+                            time_data = data.find(
+                                "time", class_="short"
+                            )  # Jul 24, 2025 at 21:43
 
-                    # создаём заголовок таблицы
-                    table.field_names = [
-                        Colors.GAY + "NFT" + Colors.RESET,
-                        Colors.YELLOW + "Number" + Colors.RESET,
-                        Colors.BLUE + "TON" + Colors.RESET,
-                        Colors.GREEN + "Status" + Colors.RESET,
-                    ]
+                            # парсим статус и цену в ton
+                            ton_status = div_content.find(
+                                "div", class_="tm-grid-item-values"
+                            )
+                            # вынес иза привышение 79 симвулов
+                            icon_ton = [
+                                "tm-grid-item-value",
+                                "tm-value",
+                                "icon-before",
+                                "icon-ton",
+                            ]
+                            div_ton = ton_status.find(
+                                "div",
+                                class_=" ".join(icon_ton),
+                            )  # 30,000
+                            div_status = ton_status.find(
+                                "div",
+                                class_="tm-grid-item-status tm-status-unavail",
+                            )  # Sold
+                            # проверка на avail статус
+                            if div_status is None:
+                                status_avail = [
+                                    "tm-grid-item-status",
+                                    "tm-status-avail",
+                                ]
+                                div_status = ton_status.find(
+                                    "div",
+                                    class_=" ".join(status_avail),
+                                )
 
-                    table.add_row(
-                        [
-                            Colors.GAY + span_name + Colors.RESET,
-                            Colors.YELLOW + span_num + Colors.RESET,
-                            Colors.BLUE + div_ton + Colors.RESET,
-                            status_color(div_status),
-                        ]
-                    )
+                            # поправляем формат
+                            if span_name is not None:
+                                span_name = span_name.text  # name NFT
 
-                print(table)
+                            if span_num is not None:
+                                span_num = span_num.text  # NFT num
+
+                            if time_data is not None:
+                                time_data = time_data.text  # Дата и время
+
+                            if div_ton is not None:
+                                div_ton = div_ton.text  # цена в TON
+
+                            # получаем статусы типа sold, for sale, on auc
+                            if div_status is not None:
+                                div_status = div_status.text
+
+                            # создаём заголовок таблицы
+                            table.field_names = [
+                                Colors.GAY + "NFT" + Colors.RESET,
+                                Colors.YELLOW + "Number" + Colors.RESET,
+                                Colors.BLUE + "TON" + Colors.RESET,
+                                Colors.GREEN + "Status" + Colors.RESET,
+                            ]
+
+                            table.add_row(
+                                [
+                                    Colors.GAY + span_name + Colors.RESET,
+                                    Colors.YELLOW + span_num + Colors.RESET,
+                                    Colors.BLUE + div_ton + Colors.RESET,
+                                    status_color(div_status),
+                                ]
+                            )
+
+                        print(table)
+                    else:
+                        logging.error(
+                            "content-type не текст не могу обработать"
+                        )
+                else:
+                    logging.error("несмог извлечь content-type")
 
     @staticmethod
     @hendler_error

@@ -1,3 +1,5 @@
+import logging
+
 from bs4 import BeautifulSoup
 from prettytable import PrettyTable
 
@@ -28,60 +30,79 @@ class StarParser:
                 url=f"{Config.URL_BASE}{endpoint}", headers=generate_headers()
             ) as resp:
                 resp.raise_for_status()
-                html = await resp.text()
-                soup = BeautifulSoup(html, Config.PARSER)
+                content = resp.headers.get("content-type", "").lower().strip()
+                if content:
+                    if content.startswith("text/html"):
+                        html = await resp.text()
+                        soup = BeautifulSoup(html, Config.PARSER)
 
-                pars0 = soup.find(
-                    "div", class_="tm-form-radio-items"
-                )  # находим нужный блок
-                pars1 = pars0.find_all(
-                    "div", class_="tm-form-radio-item-wrap"
-                )  # итерируемся по блоку
-                pars1.pop(-1)  # удаляем лишнее
+                        pars0 = soup.find(
+                            "div", class_="tm-form-radio-items"
+                        )  # находим нужный блок
+                        pars1 = pars0.find_all(
+                            "div", class_="tm-form-radio-item-wrap"
+                        )  # итерируемся по блоку
+                        pars1.pop(-1)  # удаляем лишнее
 
-                print()
+                        print()
 
-                table = PrettyTable()  # для создании таблиц
+                        table = PrettyTable()  # для создании таблиц
 
-                for blok in pars1:
-                    star = blok.find(
-                        "div", class_="tm-radio-label"
-                    )  # Получаем количество звёзд
-                    ton = blok.find(
-                        "div",
-                        class_="tm-radio-desc wide-only icon-before icon-ton",
-                    )  # Получаем тоны
-                    dollor = blok.find(
-                        "div", class_="tm-value icon-before icon-usd"
-                    )
+                        for blok in pars1:
+                            star = blok.find(
+                                "div", class_="tm-radio-label"
+                            )  # Получаем количество звёзд
+                            icon_ton = [
+                                "tm-radio-desc",
+                                "wide-only",
+                                "icon-before",
+                                "icon-ton",
+                            ]
+                            ton = blok.find(
+                                "div",
+                                class_=" ".join(icon_ton),
+                            )  # Получаем тоны
+                            dollor = blok.find(
+                                "div", class_="tm-value icon-before icon-usd"
+                            )
 
-                    if star is not None:
-                        star = star.text
-                        star = star.split()[0].strip()
-                        star = Colors.YELLOW + star + Colors.RESET
+                            if star is not None:
+                                star = star.text
+                                star = star.split()[0].strip()
+                                star = Colors.YELLOW + star + Colors.RESET
+                            else:
+                                star = (
+                                    Colors.RED
+                                    + Config.DEFAULT_STATUS
+                                    + Colors.RESET
+                                )
+
+                            ton = is_object(ton, Colors.BLUE)
+                            dollor = is_object(dollor, Colors.GREEN)
+
+                            table.field_names = [
+                                Colors.YELLOW + "Star" + Colors.RESET,
+                                Colors.BLUE + "TON" + Colors.RESET,
+                                Colors.GREEN + "$" + Colors.RESET,
+                            ]
+
+                            if explanation:
+                                if star:
+                                    star = f"{star} Star"
+                                if ton:
+                                    ton = f"{ton} TON"
+
+                            table.add_row([star, ton, dollor])
+
+                        print(table)
                     else:
-                        star = (
-                            Colors.RED + Config.DEFAULT_STATUS + Colors.RESET
+                        logging.error(
+                            f'не могу работать с Content-type: {content}'
                         )
-
-                    ton = is_object(ton, Colors.BLUE)
-                    dollor = is_object(dollor, Colors.GREEN)
-
-                    table.field_names = [
-                        Colors.YELLOW + "StarParser" + Colors.RESET,
-                        Colors.BLUE + "TON" + Colors.RESET,
-                        Colors.GREEN + "$" + Colors.RESET,
-                    ]
-
-                    if explanation:
-                        if star:
-                            star = f"{star} StarParser"
-                        if ton:
-                            ton = f"{ton} TON"
-
-                    table.add_row([star, ton, dollor])
-
-                print(table)
+                else:
+                    logging.error(
+                        "не смог найти Content-type"
+                    )
 
     @staticmethod
     def banner_main_input(clear: bool = True) -> int:
