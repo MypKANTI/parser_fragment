@@ -627,8 +627,12 @@ class UsernameParser:
                 return False
 
         # проверка начинаеться ли юз с цифры
-        if username[0].isdigit():
-            logging.info("юз не може начинаться с цифры")
+        try:
+            if username[0].isdigit():
+                logging.info("юз не може начинаться с цифры")
+                return False
+        except IndexError:
+            logging.info("не может быть пустым")
             return False
 
         # проверка конца и начало на содержание "_"

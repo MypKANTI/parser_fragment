@@ -476,11 +476,15 @@ class GetInfoFull:
             tm_section = tm_main.find(
                 "section", class_="tm-section tm-auction-section"
             )
-            # вынес отдельно изза длины более 79 симвулов получаеться
-            tm_box = "tm-section-box tm-section-countdown-wrap js-timer-wrap"
+            # вынес отдельно изза длины более 79
+            timer_wrap = [
+                "tm-section-box",
+                "tm-section-countdown-wrap",
+                "js-timer-wrap",
+            ]
             div_box = tm_section.find(
                 "div",
-                class_=tm_box,
+                class_=" ".join(timer_wrap),
             )
             div_countdown = div_box.find("div", class_="tm-section-countdown")
         except AttributeError:
@@ -736,6 +740,7 @@ class InfoFullPrint:
                     except ValueError as e:
                         # эта ошибка евляеться нормальной
                         logging.warning(e)
+                        return None
         return table
 
     def deal_end_time(
@@ -761,8 +766,11 @@ class InfoFullPrint:
             deal_end_time_color = []
 
         # перебираем список для перекраски элементов
-        for i in deal_end_time:
-            deal_end_time_color.append(Colors.GREEN + i + Colors.RESET)
+        try:
+            for i in deal_end_time:
+                deal_end_time_color.append(Colors.GREEN + i + Colors.RESET)
+        except TypeError:
+            return None
 
         if deal_end_time_color is not None:
             if bloks:
@@ -781,7 +789,7 @@ class InfoFullPrint:
                 table.field_names = ["data-time"]  # заголовок
                 table.add_row([deal_end_time_color])  # таблица
 
-        if deal_end_time_color:
+        if deal_end_time_color is not None:
             return table
 
     def status_and_(self) -> PrettyTable:
