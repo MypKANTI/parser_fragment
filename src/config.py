@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 
+from src.utils import get_parser
+
 
 @dataclass(frozen=True)
 class Config:
     TCP_LIMIT = 1  # лимит TCP соединений
     LIMIT_PER = 1  # лимит TCP на один хост
     RESPONSE_TIME = 1.6  # время между запросами
-    PARSER = "lxml"  # парсер для bs4
+    PARSER = get_parser()
     CH_BANNER = 30  # количество симвулов в банере
     TIMEOUT = 5  # таймаут
     URL_BASE = "https://fragment.com/"  # сылка её лудше не менять
