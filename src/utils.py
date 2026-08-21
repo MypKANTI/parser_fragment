@@ -30,23 +30,6 @@ class Colors:
     GAY = "\033[38;5;39m"  # послание для читатилей
 
 
-def get_parser() -> str:
-    """
-    Функция для определения парсера
-    если lxml установлен используем его
-    иначе используем html.parser
-
-    Returns:
-        str: парсер подходящий
-    """
-    try:
-        PARSER = "lxml"
-        __import__(PARSER)
-    except (ImportError, ModuleNotFoundError):
-        PARSER = "html.parser"
-    return PARSER
-
-
 def generate_headers() -> dict:
     """
     функция для генерации headers
