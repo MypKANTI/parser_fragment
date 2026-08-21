@@ -701,12 +701,14 @@ class InfoFullPrint:
 
                         # проверяем чётное или не чётное через костыль
                         if result.split(".")[-1] == "5":
+                            line1 = Colors.BLUE + i + Colors.RESET
                             bid_history_price_line1.append(
-                                i
+                                line1
                             )  # если не делиться на 2
                         else:
+                            line2 = Colors.GREEN + i + Colors.RESET
                             bid_history_price_line2.append(
-                                i
+                                line2
                             )  # если делитьсяна 2
 
                     # пише таблишу если в ней 3 элемента
@@ -734,8 +736,11 @@ class InfoFullPrint:
                     except ValueError as e:
                         # эта ошибка евляеться нормальной
                         logging.warning(e)
+        return table
 
-    def deal_end_time(self, bloks: bool = True) -> PrettyTable:
+    def deal_end_time(
+        self, bloks: bool = True, deal_end_time_color=None
+    ) -> PrettyTable:
         """
         функция для отображение времени в столбиках (таблицах)
         есть два вида меняеться он через измениния bloks на другой статус bool
@@ -743,6 +748,7 @@ class InfoFullPrint:
         Args:
             bloks (bool): делить ли время на блоки или
             вывести в одном блоке. Defaults to True.
+            deal_end_time_color (None) список для цветных элементов
         """
         # иницализация
         table = PrettyTable()
@@ -751,24 +757,31 @@ class InfoFullPrint:
         # получаем и форматируем время
         deal_end_time: List = info_full.deal_end_time()
 
-        if deal_end_time is not None:
+        if deal_end_time_color is None:
+            deal_end_time_color = []
+
+        # перебираем список для перекраски элементов
+        for i in deal_end_time:
+            deal_end_time_color.append(Colors.GREEN + i + Colors.RESET)
+
+        if deal_end_time_color is not None:
             if bloks:
                 head_table = ["days", "hour", "minutes", "seconds"]
 
-                if len(deal_end_time) == len(head_table):
+                if len(deal_end_time_color) == len(head_table):
                     # заголовок таблиц
                     table.field_names = [*head_table]
                     # таблица
-                    table.add_row([*deal_end_time])
+                    table.add_row([*deal_end_time_color])
             else:
-                deal_end_time = ":".join(
-                    deal_end_time
+                deal_end_time_color = ":".join(
+                    deal_end_time_color
                 ).strip()  # форматируем в удобный формат
 
                 table.field_names = ["data-time"]  # заголовок
-                table.add_row([deal_end_time])  # таблица
+                table.add_row([deal_end_time_color])  # таблица
 
-        if deal_end_time:
+        if deal_end_time_color:
             return table
 
     def status_and_(self) -> PrettyTable:
@@ -792,15 +805,21 @@ class InfoFullPrint:
         except IndexError:
             return []
 
+        # перекрашиваем взависимости от статуса
+        status = status_color(status=status)
+
         table_head = ["status"]  # заголовки таблы
 
         # определяем это номер или юз и по смыслу добавляем заголовок
         if date.startswith("+888") or date.startswith("888"):
             table_head.append("numder")
+            color_data = Colors.BLUE
         else:
             table_head.append("username")
+            color_data = Colors.GREEN
 
         table.field_names = [*table_head]
+        date = color_data + date + Colors.RESET
         table.add_row([status, date])
 
         return table
@@ -830,8 +849,19 @@ class InfoFullPrint:
                 list_line_3.append(t_p)
                 if count == 3:
                     count = 0
+                    # перекрашиваем каждый элемент
+                    list_line_3[0] = (
+                        Colors.YELLOW + list_line_3[0] + Colors.RESET
+                    )
+                    list_line_3[1] = (
+                        Colors.GREEN + list_line_3[1] + Colors.RESET
+                    )
+                    list_line_3[2] = (
+                        Colors.BLUE + list_line_3[2] + Colors.RESET
+                    )
+                    # записываем в таблицу
                     table.add_row(list_line_3)
-                    list_line_3 = []
+                    list_line_3 = []  # очищаем список
                     continue
 
             return table

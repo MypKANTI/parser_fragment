@@ -78,12 +78,9 @@ class NumberParser:
                                 "table-cell-value",
                                 "tm-value",
                                 "icon-before",
-                                "icon-ton"
+                                "icon-ton",
                             ]
-                            ton = blok.find(
-                                "div",
-                                class_=" ".join(icon_ton)
-                            )
+                            ton = blok.find("div", class_=" ".join(icon_ton))
                             status_avail = [
                                 "table-cell-value",
                                 "tm-value",
@@ -245,7 +242,7 @@ class NumberParser:
             )
             status_number = status_color(status_number)
             print()
-            print(Colors.BLUE + number + Colors.RESET, status_number)
+            print(status_number)
             input("\nplease enter: ")
         elif user_input == 2:
             await NumberParser.info_numder_short(endpoint=endpoint)
