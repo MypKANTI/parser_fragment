@@ -290,6 +290,39 @@ class GetInfoFull:
     def __init__(self, soup: BeautifulSoup):
         self.soup: BeautifulSoup = soup
 
+    def tm_bid_info_text(self) -> str:
+        """
+        этот блок выведит если статус sold
+        покажет когда был проданно
+
+        Returns:
+            str: строка потипу Приобретено 9 марта 2026 в 21:28
+        """
+        # переходи по пути
+        try:
+            main = self.soup.find("main", class_="tm-main js-main-content")
+            section = main.find(
+                "section", class_="tm-section tm-auction-section"
+            )
+            div_info = section.find(
+                "div", class_="tm-section-box tm-section-bid-info"
+            )
+        except AttributeError:
+            return None
+
+        # проверем есть ли блок время продажи
+        try:
+            div = div_info.find("div", class_="tm-bid-info-text")
+            time_ = div.find("time")
+        except TypeError:
+            return None
+        except AttributeError:
+            return None
+
+        if time_:
+            return time_.get_text(strip=True)
+        return None
+
     def get_head_status(self) -> list[str, str]:
         """
         получаем заголовок в фрагменте а точнее номер и статус или юз и статус
@@ -645,6 +678,30 @@ class InfoFullPrint:
 
     def __init__(self, soup):
         self.soup: BeautifulSoup = soup
+
+    def tm_bid_info_text(self) -> PrettyTable:
+        """
+        выводим когда было проданно в таблици
+
+        Returns:
+            PrettyTable: вернём готовую таблицу
+        """
+        table = PrettyTable()
+        purchased: str = GetInfoFull(self.soup)
+
+        purchased: str = purchased.tm_bid_info_text()
+
+        if purchased is None:
+            return None
+
+        purchased = Colors.YELLOW + purchased + Colors.RESET
+
+        table.field_names = ["Purchased"]
+        table.add_row([purchased])
+
+        if purchased is not None:
+            return table
+        return None
 
     def table_fixed(
         self,

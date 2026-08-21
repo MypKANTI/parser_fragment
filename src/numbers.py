@@ -201,6 +201,7 @@ class NumberParser:
 
                         # получаем таблицы
                         status_and_ = info_full_print.status_and_()
+                        tm_bid_info_text = info_full_print.tm_bid_info_text()
                         deal_end_time = info_full_print.deal_end_time()
                         table_fixed = info_full_print.table_fixed()
                         table_0 = info_full_print.table(0)
@@ -210,6 +211,9 @@ class NumberParser:
                         # статус
                         if status_and_ is not None:
                             print(status_and_)
+
+                        if tm_bid_info_text is not None:
+                            print(tm_bid_info_text)
 
                         # время до конца аукциона
                         if deal_end_time is not None:
