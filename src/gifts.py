@@ -10,12 +10,24 @@ from src.utils import (
     Colors,
     generate_headers,
     hendler_error,
-    replace_nft,
     status_color,
 )
 
 
 class GiftParser:
+    @staticmethod
+    def replace_nft(text: str) -> str:
+        """
+        Функция для удаления лишних симвулом таких как ( -’)
+
+        Args:
+            text (str): строка для проверки
+
+        Return:
+            text (str): вернёт исправленую строку
+        """
+        return text.lower().strip().translate(str.maketrans("", "", " -’"))
+
     @staticmethod
     async def parsing_market(url: str) -> None:
         """
@@ -230,9 +242,9 @@ class GiftParser:
                 nft_name = dict_gift.get(user_input, Config.DEFAULT_STATUS)
 
                 if nft_name != Config.DEFAULT_STATUS:
-                    url = (
-                        f"{url.replace('/gifts/', '')}{replace_nft(nft_name)}"
-                    )
+                    # название nft без ишних симвулов
+                    replace_nft: str = GiftParser.replace_nft(nft_name)
+                    url = f"{url.replace('/gifts/', '')}{replace_nft}"
                     await GiftParser.parsing_market(url)
 
     @staticmethod
