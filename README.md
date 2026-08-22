@@ -1,14 +1,61 @@
-# Parser Fragment
+# 🔍 Parser Fragment
 
-данная программа умеет парсить такие данные как
+![Telegram](https://img.shields.io/badge/KANTI-Telegram-blue?logo=telegram&link=https://t.me/Myp_KANTI)
+![Python](https://img.shields.io/badge/Python-3.12.6-yellow?logo=python)
+![Python3](https://img.shields.io/badge/Python3-3.11.9-yellow?logo=python)
 
-- Username
+Парсер сайта **[fragment](https://fragment.com/)**
+
+<img onerror="logo fragment" src="https://static47.tgcnt.ru/posts/_0/5d/5db86f8329523286e4ed10ad29d3f467.jpg">
+
+## Доступно для парсинга
+Данные которые можем парсить благодаря этому парсеру
 - NFT
-- Start
+- Stars
 - Numbers
+- Username
 - Premium
 
-## Install 
+## Особенность
+Парсер определет точный статус
+
+Статусы бывают такие:
+
+- Sold<br>
+- For sale<br>
+- On auction<br>
+- Unavailable<br>
+- Available<br>
+- Taken<br>
+
+## Объяснения статусов
+
+**Sold** - Продано 🤝<br>
+**For sale** - На продаже 🛒<br>
+**On auction** - На аукционе 🏷️<br>
+**Unavailable** - Недоступен 🔴<br>
+**Available** - Доступный 🟢<br>
+**Taken** - Занят 📅<br>
+
+``Вы сможете занять username если только статус его Unavailable``
+
+На [fragment](https://fragment.com/) статус Unavailable означает, что владелец не выставил имя на торги, но технически оно свободно для назначения цены. Именно этот статус позволяет вам занять юзернейм. Поскольку технически владелец не назначен
+
+## Поддерживает
+Проверенно на личном опыте
+| platform | status |
+|----------|--------|
+| Windows  | work ✅|
+|  Ubuntu  | work ✅|
+|  Termux  | work ✅|
+
+## Требование для запуска
+-  *OS*
+-  *Python* ---> **version 3.11+**
+-  *Установить зависимости с* **requirements.txt**
+
+## install
+Универсальная установка программы
 ```bash
 git clone https://github.com/MypKANTI/parser_fragment.git
 
@@ -19,27 +66,34 @@ pip3 install -r requirements.txt
 python3 main.py
 ```
 
-## если lxml не работает
-в таком случае вам нужно **отредактировать** конфиг по пути **src/config.py** *(я с этим столкнулся когда тестировал программу в termux)*
-```python
-from dataclasses import dataclass
+## О парсере
+Программа не использует API она парсит все данные через bs4 написанно одним человеком на python используеться aiohttp и asyncio
 
-
-@dataclass(frozen=True)
-class Config:
-    TCP_LIMIT = 1  # лимит TCP соединений
-    LIMIT_PER = 1  # лимит TCP на один хост
-    RESPONSE_TIME = 1.6  # время между запросами
-    PARSER = "lxml"  # парсер для bs4
-    CH_BANNER = 30  # количество симвулов в банере
-    TIMEOUT = 5  # таймаут
-    URL_BASE = "https://fragment.com/"  # сылка её лудше не менять
-    DEFAULT_STATUS = "нет"  # статус если не нашёл такойто элемент/данные
+## Структура проекта
+```bash
+parser_fragment
+├───logs
+│   └───parser.log
+├───src
+│   ├───__init__.py
+│   ├───config.py
+│   ├───gifts.py
+│   ├───numbers.py
+│   ├───premiums.py
+│   ├───stars.py
+│   ├───usernames.py
+│   └───utils.py
+├───tests
+│   ├───__init__.py
+│   ├───test_username.py
+│   └───test_utils.py
+├───.gitignore
+├───.pre-commit-config.yaml
+├───LICENSE
+├───main.py
+├───README.md
+├───requirements.txt
+└───start.bat
 ```
-замените *```PARSER = "lxml"```* на *```PARSER = "html.parser"```*
 
-## особенность
-этот парсер не просто проверяет занят ли юзер или нет он узнаёт его точный статус такой как продано или на продажу или занят или не занят или активный
-
-## о парсере
-я не планирую вести этот проект я считаю его просто проектом для портфолио так что улучшений не будет выложил в открытый доступ поскольку посчитал что этот проект может быть полезен кому-то
+# Хорошего дня тебе дружище :)
