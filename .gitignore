@@ -1,4 +1,22 @@
-__pycache__
-*.pyc
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+
+# Виртуальное окружение
+venv/
+env/
+.venv/
+ENV/
+
+# Логи
 *.log
 logs/
+
+# Windows (системные)
+Desktop.ini
+
+# Linux
+# навсякий случий не хочу потом спалить историю команд
+.bash_history
