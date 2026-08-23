@@ -253,8 +253,8 @@ class UsernameParser:
 
                             table = PrettyTable()
 
-                            for blok in pars0:
-                                username = blok.find(
+                            for block in pars0:
+                                username = block.find(
                                     "div", class_="table-cell-value tm-value"
                                 ).text  # Получаем юз типа @feds
                                 status_avail = [
@@ -262,14 +262,14 @@ class UsernameParser:
                                     "tm-value",
                                     "tm-status-avail",
                                 ]
-                                status = blok.find(
+                                status = block.find(
                                     "div",
                                     class_=" ".join(status_avail),
                                 )  # Получаем статус например Resale
-                                dollar = blok.find(
+                                dollar = block.find(
                                     "div", "table-cell-desc wide-only"
                                 )  # получаем стоймость в $ типа 23,665
-                                time_data = blok.find(
+                                time_data = block.find(
                                     "div", "tm-timer"
                                 )  # Получить время окончание рынк
                                 icon_ton = [
@@ -278,7 +278,7 @@ class UsernameParser:
                                     "icon-before",
                                     "icon-ton",
                                 ]
-                                ton = blok.find(
+                                ton = block.find(
                                     "div",
                                     class_=" ".join(icon_ton),
                                 )
@@ -289,12 +289,12 @@ class UsernameParser:
                                         "tm-value",
                                         "tm-status-unavail",
                                     ]
-                                    status = blok.find(
+                                    status = block.find(
                                         "div",
                                         class_=" ".join(status_unavail),
                                     )
                                 if status is None:
-                                    status = blok.find(
+                                    status = block.find(
                                         "div", class_="table-cell-status-thin"
                                     )
                                 if status is None:
@@ -303,7 +303,7 @@ class UsernameParser:
                                         "tm-value",
                                         "tm-status-taken",
                                     ]
-                                    status = blok.find(
+                                    status = block.find(
                                         "div",
                                         class_=" ".join(status_taken),
                                     )
@@ -374,14 +374,16 @@ class UsernameParser:
                         html = await resp.text()
                         soup = BeautifulSoup(html, Config.PARSER)
 
-                        bloks = soup.find_all("tr", class_="tm-row-selectable")
+                        blocks = soup.find_all(
+                            "tr", class_="tm-row-selectable"
+                        )
 
                         table = PrettyTable()
 
                         print()
 
-                        for blok in bloks:
-                            get_username = blok.find(
+                        for block in blocks:
+                            get_username = block.find(
                                 "div", class_="table-cell-value tm-value"
                             )
                             icon_ton = [
@@ -390,7 +392,7 @@ class UsernameParser:
                                 "icon-before",
                                 "icon-ton",
                             ]
-                            ton = blok.find(
+                            ton = block.find(
                                 "div",
                                 class_=" ".join(icon_ton),
                             )
@@ -399,7 +401,7 @@ class UsernameParser:
                                 "tm-value",
                                 "tm-status-avail",
                             ]
-                            status = blok.find(
+                            status = block.find(
                                 "div",
                                 class_=" ".join(status_avail),
                             )
@@ -410,12 +412,12 @@ class UsernameParser:
                                     "tm-value",
                                     "tm-status-unavail",
                                 ]
-                                status = blok.find(
+                                status = block.find(
                                     "div",
                                     class_=" ".join(status_unavail),
                                 )
                             if status is None:
-                                status = blok.find(
+                                status = block.find(
                                     "div", class_="table-cell-status-thin"
                                 )
 
@@ -425,7 +427,7 @@ class UsernameParser:
                                     "tm-value",
                                     "tm-status-taken",
                                 ]
-                                status = blok.find(
+                                status = block.find(
                                     "div",
                                     class_=" ".join(status_taken),
                                 )
@@ -504,15 +506,17 @@ class UsernameParser:
                         html = await resp.text()
                         soup = BeautifulSoup(html, Config.PARSER)
 
-                        bloks = soup.find_all("tr", class_="tm-row-selectable")
+                        blocks = soup.find_all(
+                            "tr", class_="tm-row-selectable"
+                        )
 
-                        for blok in bloks:
+                        for block in blocks:
                             status_avail = [
                                 "table-cell-value",
                                 "tm-value",
                                 "tm-status-avail",
                             ]
-                            status = blok.find(
+                            status = block.find(
                                 "div",
                                 class_=" ".join(status_avail),
                             )
@@ -523,12 +527,12 @@ class UsernameParser:
                                     "tm-value",
                                     "tm-status-unavail",
                                 ]
-                                status = blok.find(
+                                status = block.find(
                                     "div",
                                     class_=" ".join(status_unavail),
                                 )
                             if status is None:
-                                status = blok.find(
+                                status = block.find(
                                     "div", class_="table-cell-status-thin"
                                 )
 
@@ -538,7 +542,7 @@ class UsernameParser:
                                     "tm-value",
                                     "tm-status-taken",
                                 ]
-                                status = blok.find(
+                                status = block.find(
                                     "div",
                                     class_=" ".join(status_taken),
                                 )
@@ -547,7 +551,7 @@ class UsernameParser:
                                     "tm-section-header-status"
                                     "tm-status-unavail"
                                 ]
-                                status = blok.find(
+                                status = block.find(
                                     "div",
                                     class_=" ".join(status_unavail),
                                 )

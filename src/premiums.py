@@ -54,18 +54,18 @@ class PremiumParser:
                         html = await resp.text()
                         soup = BeautifulSoup(html, Config.PARSER)
 
-                        bloks = soup.find_all(
+                        blocks = soup.find_all(
                             "div", class_="tm-form-radio-label"
                         )
 
                         table = PrettyTable()  # для создании таблиц
 
-                        for blok in bloks:
-                            ton = blok.find(
+                        for block in blocks:
+                            ton = block.find(
                                 "div", class_="tm-value icon-before icon-ton"
                             )
-                            dollar = blok.find("div", class_="tm-radio-desc")
-                            subscription_time = blok.find(
+                            dollar = block.find("div", class_="tm-radio-desc")
+                            subscription_time = block.find(
                                 "div", class_="tm-radio-label"
                             )
 

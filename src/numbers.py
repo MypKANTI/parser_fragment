@@ -70,8 +70,8 @@ class NumberParser:
 
                         table = PrettyTable()  # для создании таблиц
 
-                        for blok in pars0:
-                            numder_ = blok.find(
+                        for block in pars0:
+                            numder_ = block.find(
                                 "div", class_="table-cell-value tm-value"
                             )
                             icon_ton = [
@@ -80,17 +80,17 @@ class NumberParser:
                                 "icon-before",
                                 "icon-ton",
                             ]
-                            ton = blok.find("div", class_=" ".join(icon_ton))
+                            ton = block.find("div", class_=" ".join(icon_ton))
                             status_avail = [
                                 "table-cell-value",
                                 "tm-value",
                                 "tm-status-avail",
                             ]
-                            status = blok.find(
+                            status = block.find(
                                 "div",
                                 class_=" ".join(status_avail),
                             )
-                            time = blok.find("div", class_="tm-timer")
+                            time = block.find("div", class_="tm-timer")
 
                             if status is None:
                                 status_unavail = [
@@ -98,7 +98,7 @@ class NumberParser:
                                     "tm-value",
                                     "tm-status-unavail",
                                 ]
-                                status = blok.find(
+                                status = block.find(
                                     "div",
                                     class_=" ".join(status_unavail),
                                 )
@@ -156,13 +156,13 @@ class NumberParser:
                 html = await resp.text()
 
                 soup = BeautifulSoup(html, Config.PARSER)
-                blok = soup.find("tr", class_="tm-row-selectable")
-                status = blok.find(
+                block = soup.find("tr", class_="tm-row-selectable")
+                status = block.find(
                     "div", class_="table-cell-value tm-value tm-status-avail"
                 )
 
                 if status is None:
-                    status = blok.find(
+                    status = block.find(
                         "div",
                         class_="table-cell-value tm-value tm-status-unavail",
                     )

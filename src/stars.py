@@ -48,8 +48,8 @@ class StarParser:
 
                         table = PrettyTable()  # для создании таблиц
 
-                        for blok in pars1:
-                            star = blok.find(
+                        for block in pars1:
+                            star = block.find(
                                 "div", class_="tm-radio-label"
                             )  # Получаем количество звёзд
                             icon_ton = [
@@ -58,11 +58,11 @@ class StarParser:
                                 "icon-before",
                                 "icon-ton",
                             ]
-                            ton = blok.find(
+                            ton = block.find(
                                 "div",
                                 class_=" ".join(icon_ton),
                             )  # Получаем тоны
-                            dollor = blok.find(
+                            dollar = block.find(
                                 "div", class_="tm-value icon-before icon-usd"
                             )
 
@@ -78,7 +78,7 @@ class StarParser:
                                 )
 
                             ton = is_object(ton, Colors.BLUE)
-                            dollor = is_object(dollor, Colors.GREEN)
+                            dollar = is_object(dollar, Colors.GREEN)
 
                             table.field_names = [
                                 Colors.YELLOW + "Star" + Colors.RESET,
@@ -92,17 +92,15 @@ class StarParser:
                                 if ton:
                                     ton = f"{ton} TON"
 
-                            table.add_row([star, ton, dollor])
+                            table.add_row([star, ton, dollar])
 
                         print(table)
                     else:
                         logging.error(
-                            f'не могу работать с Content-type: {content}'
+                            f"не могу работать с Content-type: {content}"
                         )
                 else:
-                    logging.error(
-                        "не смог найти Content-type"
-                    )
+                    logging.error("не смог найти Content-type")
 
     @staticmethod
     def banner_main_input(clear: bool = True) -> int:

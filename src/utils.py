@@ -443,13 +443,13 @@ class GetInfoFull:
                     "div",
                     class_="table-cell-value tm-value icon-before icon-ton",
                 )
-                dollor = div_table_cell.find("div", class_="table-cell-desc")
+                dollar = div_table_cell.find("div", class_="table-cell-desc")
                 wallet = div_table_cell.find("a", class_="tm-wallet")
 
                 # выводим только то что есть
                 if ton is not None:
-                    if dollor is not None:
-                        return [ton.text, dollor.text.split("$")[-1]]
+                    if dollar is not None:
+                        return [ton.text, dollar.text.split("$")[-1]]
                     return [ton.text]
                 return []
 
@@ -462,7 +462,7 @@ class GetInfoFull:
                     "div",
                     class_="table-cell-value tm-value icon-before icon-ton",
                 )  # получаем цену в крипте
-                dollor = table_cell.find(
+                dollar = table_cell.find(
                     "div", class_="table-cell-desc"
                 )  # получаем цену в доларах
                 wallet = table_cell.find(
@@ -471,9 +471,9 @@ class GetInfoFull:
 
                 # сортеруем и удобно выводим
                 if ton is not None:
-                    if dollor is not None:
+                    if dollar is not None:
                         price_list.append(f"TON {ton.text}")
-                        price_list.append(f"${dollor.text.split('$')[-1]}")
+                        price_list.append(f"${dollar.text.split('$')[-1]}")
                     else:
                         price_list.append(ton.text)
 
@@ -584,11 +584,11 @@ class GetInfoFull:
         )
         thead = table_tm.find("thead")
         tr = thead.find("tr")
-        ths = tr.find_all("th")
+        th_tags = tr.find_all("th")
 
         list_bid_history = []  # список для заголвков таблици
 
-        for th in ths:
+        for th in th_tags:
             list_bid_history.append(th.text)
 
         return list_bid_history
@@ -788,14 +788,14 @@ class InfoFullPrint:
         return table
 
     def deal_end_time(
-        self, bloks: bool = True, deal_end_time_color=None
+        self, blocks: bool = True, deal_end_time_color=None
     ) -> PrettyTable:
         """
         функция для отображение времени в столбиках (таблицах)
-        есть два вида меняеться он через измениния bloks на другой статус bool
+        есть два вида меняеться он через измениния blocks на другой статус bool
 
         Args:
-            bloks (bool): делить ли время на блоки или
+            blocks (bool): делить ли время на блоки или
             вывести в одном блоке. Defaults to True.
             deal_end_time_color (None) список для цветных элементов
         """
@@ -817,7 +817,7 @@ class InfoFullPrint:
             return None
 
         if deal_end_time_color is not None:
-            if bloks:
+            if blocks:
                 head_table = ["days", "hour", "minutes", "seconds"]
 
                 if len(deal_end_time_color) == len(head_table):
