@@ -87,6 +87,7 @@ parser_fragment
 │   ├───__init__.py
 │   ├───test_username.py
 │   └───test_utils.py
+├───.codespellrc
 ├───.gitignore
 ├───.pre-commit-config.yaml
 ├───LICENSE

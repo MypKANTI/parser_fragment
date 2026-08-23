@@ -1,0 +1,2 @@
+[codespell]
+skip = log/,__pycache__,*.pyc,*.log,*.txt,*.md,*.bat,*.yaml

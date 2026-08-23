@@ -6,7 +6,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
-        args: ['--maxkb=20000']  
+        args: ['--maxkb=20000']
 
   - repo: https://github.com/pycqa/isort
     rev: 8.0.1
@@ -25,3 +25,9 @@ repos:
     hooks:
       - id: flake8
         args: ["--max-line-length=79"]
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.3
+    hooks:
+      - id: codespell
+        args: ["--config .codespellrc"]
