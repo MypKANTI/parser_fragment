@@ -1,6 +1,6 @@
 import pytest
 
-from src.utils import replace_nft
+from src.gifts import GiftParser
 
 
 @pytest.mark.parametrize(
@@ -20,4 +20,4 @@ def test_replace_nft(nft_name: str, nft_name_result: str) -> None:
         nft_name (str): тестовое nft название
         nft_name_result (str): ожидаймый результата
     """
-    assert replace_nft(nft_name) == nft_name_result
+    assert GiftParser.replace_nft(nft_name) == nft_name_result
