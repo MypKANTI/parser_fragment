@@ -27,7 +27,6 @@ import functools
 import json
 import logging
 import os
-from typing import Any
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 PATH_FILE_JSON = os.path.join(PATH, "config.json")
@@ -50,7 +49,7 @@ def get_parser() -> str:
     return PARSER
 
 
-def check_except(DEFAULT: Any):
+def check_except(DEFAULT: int | float | str | bool):
     """
     Декаратор для вывода конфига
     если файла нету или прозишла ошибка
@@ -58,7 +57,8 @@ def check_except(DEFAULT: Any):
     DEFAULT
 
     Args:
-        DEFAULT (Any): пренимает float, str, int, bool
+        DEFAULT (Any): пренимает
+        float, str, int, bool
         эти данные он вернёт если произошла ошибка
     """
 
@@ -76,7 +76,7 @@ def check_except(DEFAULT: Any):
     return decorator
 
 
-def validate_type(type):
+def validate_type(type: int | float | str | bool):
     """
     декоратор для определения типа обьекта
 
@@ -103,7 +103,7 @@ class ConfigGetJson:
     """класс для работы с .json"""
 
     @staticmethod
-    def _read_file():
+    def _read_file() -> dict:
         """
         функция чтения и возращение данных как словарь
 
@@ -122,21 +122,23 @@ class ConfigGetJson:
         @check_except(1)
         @validate_type(int)
         def tcp_limit(
-            type="network", meaning="max_concurrent_connections"
+            type: str = "network", meaning: str = "max_concurrent_connections"
         ) -> int:
             return ConfigGetJson._read_file()[type][meaning]
 
         @staticmethod
         @check_except(1)
         @validate_type(int)
-        def limit_per(type="network", meaning="limit_per_host") -> int:
+        def limit_per(
+            type: str = "network", meaning: str = "limit_per_host"
+        ) -> int:
             return ConfigGetJson._read_file()[type][meaning]
 
         @staticmethod
         @check_except(1.6)
         @validate_type(float)
         def response_time(
-            type="network", meaning="response_timeout_seconds"
+            type: str = "network", meaning: str = "response_timeout_seconds"
         ) -> float:
             return ConfigGetJson._read_file()[type][meaning]
 
@@ -144,12 +146,14 @@ class ConfigGetJson:
         @check_except(5)
         @validate_type(int)
         def timeout(
-            type="network", meaning="connection_timeout_seconds"
+            type: str = "network", meaning: str = "connection_timeout_seconds"
         ) -> int:
             return ConfigGetJson._read_file()[type][meaning]
 
         @staticmethod
         @check_except("нет")
         @validate_type(str)
-        def default_status(type="visual", meaning="default_status") -> str:
+        def default_status(
+            type: str = "visual", meaning: str = "default_status"
+        ) -> str:
             return ConfigGetJson._read_file()[type][meaning]

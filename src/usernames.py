@@ -46,7 +46,7 @@ class UsernameParser:
     """
 
     @staticmethod
-    def banner_sort_filter(clear=True) -> str:
+    def banner_sort_filter(clear: bool = True) -> str:
         """
         банер для выбора действик
 
@@ -66,7 +66,7 @@ class UsernameParser:
     """
 
     @staticmethod
-    def banner_sort_sort(clear=True) -> str:
+    def banner_sort_sort(clear: bool = True) -> str:
         """
         банер для выбора действик
 
@@ -87,7 +87,7 @@ class UsernameParser:
     """
 
     @staticmethod
-    def banner_generate_username(clear=True) -> str:
+    def banner_generate_username(clear: bool = True) -> str:
         """
         бБанер выбора типа генерации юзов
 
@@ -575,7 +575,7 @@ class UsernameParser:
                     logging.error("несмог извлечь content-type")
 
     @staticmethod
-    def check_start_username(username: str) -> None:
+    def check_start_username(username: str) -> str:
         """
         проверяет и изменяет формат с сылки на юз
         username - юз который надо проверить

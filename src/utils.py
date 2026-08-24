@@ -64,7 +64,6 @@ def generate_headers() -> dict:
 
 def clear_screen() -> None:
     """Очистка экрана в незовисимости от ОС"""
-    # os.system('cls' if os.name == 'nt' else 'clear')
     subprocess.run("cls" if os.name == "nt" else "clear", shell=True)
 
 
@@ -103,8 +102,10 @@ def check_input(text: str) -> int:
     Returns:
         int: если чесло правильное возращаем его
     """
-
-    text = text.strip()
+    if isinstance(text, str):
+        text = text.strip()
+    else:
+        raise TypeError(f"не str {text}")
 
     while True:
         try:
