@@ -1,0 +1,13 @@
+{
+    "network": {
+        "_comment": "данные которые относяться к запросам",
+        "max_concurrent_connections": 1,
+        "limit_per_host": 1,
+        "response_timeout_seconds": 1.6,
+        "connection_timeout_seconds": 5
+    },
+    "visual": {
+        "_comment": "визуальное изменение",
+        "default_status": "нету"
+    }
+}

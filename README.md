@@ -76,8 +76,10 @@ parser_fragment
 │   └───parser.log
 ├───src
 │   ├───__init__.py
+│   ├───config.json
 │   ├───config.py
 │   ├───gifts.py
+│   ├───helper_config.py
 │   ├───numbers.py
 │   ├───premiums.py
 │   ├───stars.py
@@ -85,8 +87,8 @@ parser_fragment
 │   └───utils.py
 ├───tests
 │   ├───__init__.py
-│   ├───test_username.py
-│   └───test_gifts.py
+│   ├───test_gifts.py
+│   └───test_username.py
 ├───.codespellrc
 ├───.gitignore
 ├───.pre-commit-config.yaml

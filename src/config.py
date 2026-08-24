@@ -1,34 +1,17 @@
-from dataclasses import dataclass
+from typing import Final
+
+from src.helper_config import ConfigGetJson, get_parser
 
 
-def get_parser() -> str:
-    """
-    Функция для определения парсера
-    если lxml установлен используем его
-    иначе используем html.parser
-
-    Returns:
-        str: парсер подходящий
-    """
-    try:
-        PARSER = "lxml"
-        __import__(PARSER)
-    except (ImportError, ModuleNotFoundError):
-        PARSER = "html.parser"
-    return PARSER
-
-
-@dataclass(frozen=True)
 class Config:
-    TCP_LIMIT = 1  # лимит TCP соединений
-    LIMIT_PER = 1  # лимит TCP на один хост
-    RESPONSE_TIME = 1.6  # время между запросами
-    PARSER = get_parser()
-    CH_BANNER = 30  # количество симвулов в банере
-    TIMEOUT = 5  # таймаут
-    URL_BASE = "https://fragment.com/"  # сылка её лудше не менять
-    DEFAULT_STATUS = "нет"  # статус если не нашёл такойто элемент/данные
-    en_list = [
+    TCP_LIMIT: int = ConfigGetJson.Get.tcp_limit()
+    LIMIT_PER: int = ConfigGetJson.Get.limit_per()
+    RESPONSE_TIME: float = ConfigGetJson.Get.response_time()
+    PARSER: str = get_parser()
+    TIMEOUT: int = ConfigGetJson.Get.timeout()
+    URL_BASE: Final[str] = "https://fragment.com/"
+    DEFAULT_STATUS: str = ConfigGetJson.Get.default_status()
+    en_list: Final = [
         "q",
         "w",
         "e",
@@ -56,7 +39,7 @@ class Config:
         "n",
         "m",
     ]  # список англиских букв
-    special_chars = [
+    special_chars: Final = [
         "!",
         '"',
         "№",
@@ -86,8 +69,8 @@ class Config:
         "`",
         "~",
         ".",
-    ]  # спиц симвулы и прочие знаки которые запрещены в юзах
-    ru_chars = [
+    ]  # спец симвулы и прочие знаки которые запрещены в юзах
+    ru_chars: Final = [
         "й",
         "ц",
         "у",
