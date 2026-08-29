@@ -136,7 +136,7 @@ class StarParser:
     @staticmethod
     async def run() -> None:
         endpoint = "stars"
-        user_input: str = StarParser.banner_main_input()
+        user_input: int = StarParser.banner_main_input()
 
         try:
             async with ClientParser.start() as session:
