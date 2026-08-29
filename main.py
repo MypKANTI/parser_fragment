@@ -39,6 +39,7 @@ logging.basicConfig(
         logging.FileHandler(filename=PATH_FILE_LOG, encoding="UTF-8"),
         logging.StreamHandler(),
     ],
+    force=True,
 )  # для логирование настройка
 
 
@@ -50,18 +51,19 @@ async def main() -> None:
     while True:
         print(banner())
 
-        user_input = check_input("ваш выбор")
+        user_input: int = check_input("ваш выбор")
 
-        if user_input == 1:
-            await GiftParser.run()
-        elif user_input == 2:
-            await StarParser.run()
-        elif user_input == 3:
-            await NumberParser.run()
-        elif user_input == 4:
-            await UsernameParser.run()
-        elif user_input == 5:
-            await PremiumParser.run()
+        dict_funcs = {
+            1: GiftParser.run,
+            2: StarParser.run,
+            3: NumberParser.run,
+            4: UsernameParser.run,
+            5: PremiumParser.run,
+        }
+
+        func_name = dict_funcs.get(user_input, None)
+        if func_name is not None:
+            await func_name()
 
 
 if __name__ == "__main__":
