@@ -136,7 +136,7 @@ class StarParser:
     @staticmethod
     async def run() -> None:
         endpoint = "stars"
-        user_input = StarParser.banner_main_input()
+        user_input: str = StarParser.banner_main_input()
 
         try:
             async with ClientParser.start() as session:
@@ -144,7 +144,7 @@ class StarParser:
                     endpoint = f"{endpoint}/buy"
                 elif user_input >= 2:
                     endpoint = f"{endpoint}/giveaway"
-                    logging.debug(f"использую эдпоинт {endpoint}")
+                logging.debug(f"использую эдпоинт {endpoint}")
                 await StarParser.stars_price(session, endpoint)
                 input("\nplease enter: ")
         except asyncio.exceptions.CancelledError:
