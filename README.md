@@ -122,31 +122,41 @@ uv run main.py
 ## Структура проекта
 ```bash
 parser_fragment
+│   .codespellrc
+│   .gitignore
+│   .pre-commit-config.yaml
+│   LICENSE
+│   main.py
+│   pyproject.toml
+│   README.md
+│   requirements.txt
+│   start.bat
+│   uv.lock
+│
 ├───logs
-│   └───parser.log
+│       parser.log
+│
 ├───src
-│   ├───__init__.py
-│   ├───config.json
-│   ├───config.py
-│   ├───gifts.py
-│   ├───helper_config.py
-│   ├───numbers.py
-│   ├───premiums.py
-│   ├───stars.py
-│   ├───usernames.py
-│   └───utils.py
-├───tests
-│   ├───__init__.py
-│   ├───test_gifts.py
-│   └───test_username.py
-├───.codespellrc
-├───.gitignore
-├───.pre-commit-config.yaml
-├───LICENSE
-├───main.py
-├───README.md
-├───requirements.txt
-└───start.bat
+│   │   config.json
+│   │   config.py
+│   │   gifts.py
+│   │   helper_config.py
+│   │   numbers.py
+│   │   premiums.py
+│   │   stars.py
+│   │   usernames.py
+│   │   utils.py
+│   │   __init__.py
+│   │
+│   ├───parser_fragment
+│   │       __init__.py
+│   │
+│   └───__pycache__
+│
+└───tests
+        test_gifts.py
+        test_username.py
+        __init__.py
 ```
 
 # Хорошего дня тебе дружище :)
