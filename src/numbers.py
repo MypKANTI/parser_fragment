@@ -8,6 +8,7 @@ from src.config import Config
 from src.utils import (
     ClientParser,
     Colors,
+    HTMLClasses,
     InfoFullPrint,
     check_input,
     clear_screen,
@@ -81,33 +82,17 @@ class NumberParser:
                         numder_ = block.find(
                             "div", class_="table-cell-value tm-value"
                         )
-                        icon_ton = [
-                            "table-cell-value",
-                            "tm-value",
-                            "icon-before",
-                            "icon-ton",
-                        ]
-                        ton = block.find("div", class_=" ".join(icon_ton))
-                        status_avail = [
-                            "table-cell-value",
-                            "tm-value",
-                            "tm-status-avail",
-                        ]
+                        ton = block.find("div", class_=HTMLClasses.icon_ton())
                         status = block.find(
                             "div",
-                            class_=" ".join(status_avail),
+                            class_=HTMLClasses.status_avail(),
                         )
                         time = block.find("div", class_="tm-timer")
 
                         if status is None:
-                            status_unavail = [
-                                "table-cell-value",
-                                "tm-value",
-                                "tm-status-unavail",
-                            ]
                             status = block.find(
                                 "div",
-                                class_=" ".join(status_unavail),
+                                class_=HTMLClasses.status_unavail(),
                             )
 
                         numder_ = is_object(numder_, Colors.GAY)
@@ -165,14 +150,12 @@ class NumberParser:
 
             soup = BeautifulSoup(html, Config.PARSER)
             block = soup.find("tr", class_="tm-row-selectable")
-            status = block.find(
-                "div", class_="table-cell-value tm-value tm-status-avail"
-            )
+            status = block.find("div", class_=HTMLClasses.status_avail())
 
             if status is None:
                 status = block.find(
                     "div",
-                    class_="table-cell-value tm-value tm-status-unavail",
+                    class_=HTMLClasses.status_unavail(),
                 )
 
             status = (

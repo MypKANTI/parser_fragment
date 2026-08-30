@@ -30,6 +30,61 @@ class Colors:
     GAY = "\033[38;5;39m"  # послание для читатилей
 
 
+class HTMLClasses:
+    """
+    класс хранение всех классов html для папсинга
+    """
+
+    @staticmethod
+    def _result(classes_list: list):
+        """
+        функция для отображения
+        информации в правильном формате
+        """
+        return " ".join(classes_list)
+
+    @staticmethod
+    def icon_ton() -> str:
+        ICON_TON = [  # класс хранение цен на ton
+            "table-cell-value",
+            "tm-value",
+            "icon-before",
+            "icon-ton",
+        ]
+
+        return HTMLClasses._result(ICON_TON)
+
+    @staticmethod
+    def status_avail() -> str:
+        STATUS_AVAIL = [
+            "table-cell-value",
+            "tm-value",
+            "tm-status-avail",
+        ]
+
+        return HTMLClasses._result(STATUS_AVAIL)
+
+    @staticmethod
+    def status_unavail() -> str:
+        STATUS_UNAVAIL = [
+            "table-cell-value",
+            "tm-value",
+            "tm-status-unavail",
+        ]
+
+        return HTMLClasses._result(STATUS_UNAVAIL)
+
+    @staticmethod
+    def status_taken() -> str:
+        STATUS_TAKEN = [
+            "table-cell-value",
+            "tm-value",
+            "tm-status-taken",
+        ]
+
+        return HTMLClasses._result(STATUS_TAKEN)
+
+
 def generate_headers() -> dict:
     """
     функция для генерации headers
@@ -112,16 +167,14 @@ def check_input(text: str) -> int:
             user_input = int(input(f"{text} {getpass.getuser()}: "))
             return user_input
         except ValueError:
-            logging.info("потльзователь вёл не число | func check_input")
+            logging.info("пользователь вёл не число")
             print(
                 "хм это не похоже на число попробуй ещё раз дружище :)",
                 end="\n\n",
             )
             time.sleep(1.5)
         except (KeyboardInterrupt, SystemExit, EOFError):
-            logging.info(
-                "пользователь прервал работу программы | func check_input"
-            )
+            logging.info("пользователь прервал работу программы")
             print("\nну ладно пока жду твоего возращение ;)")
             sys.exit(1)
 

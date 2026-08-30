@@ -14,6 +14,7 @@ from src.numbers import NumberParser
 from src.utils import (
     ClientParser,
     Colors,
+    HTMLClasses,
     check_input,
     clear_screen,
     generate_headers,
@@ -257,14 +258,9 @@ class UsernameParser:
                                 username = block.find(
                                     "div", class_="table-cell-value tm-value"
                                 ).text  # Получаем юз типа @feds
-                                status_avail = [
-                                    "table-cell-value",
-                                    "tm-value",
-                                    "tm-status-avail",
-                                ]
                                 status = block.find(
                                     "div",
-                                    class_=" ".join(status_avail),
+                                    class_=HTMLClasses.status_avail(),
                                 )  # Получаем статус например Resale
                                 dollar = block.find(
                                     "div", "table-cell-desc wide-only"
@@ -272,40 +268,24 @@ class UsernameParser:
                                 time_data = block.find(
                                     "div", "tm-timer"
                                 )  # Получить время окончание рынк
-                                icon_ton = [
-                                    "table-cell-value",
-                                    "tm-value",
-                                    "icon-before",
-                                    "icon-ton",
-                                ]
                                 ton = block.find(
                                     "div",
-                                    class_=" ".join(icon_ton),
+                                    class_=HTMLClasses.icon_ton(),
                                 )
 
                                 if status is None:
-                                    status_unavail = [
-                                        "table-cell-value",
-                                        "tm-value",
-                                        "tm-status-unavail",
-                                    ]
                                     status = block.find(
                                         "div",
-                                        class_=" ".join(status_unavail),
+                                        class_=HTMLClasses.status_unavail(),
                                     )
                                 if status is None:
                                     status = block.find(
                                         "div", class_="table-cell-status-thin"
                                     )
                                 if status is None:
-                                    status_taken = [
-                                        "table-cell-value",
-                                        "tm-value",
-                                        "tm-status-taken",
-                                    ]
                                     status = block.find(
                                         "div",
-                                        class_=" ".join(status_taken),
+                                        class_=HTMLClasses.status_taken(),
                                     )
 
                                 ton = is_object(ton, Colors.BLUE)
@@ -386,35 +366,19 @@ class UsernameParser:
                             get_username = block.find(
                                 "div", class_="table-cell-value tm-value"
                             )
-                            icon_ton = [
-                                "table-cell-value",
-                                "tm-value",
-                                "icon-before",
-                                "icon-ton",
-                            ]
                             ton = block.find(
                                 "div",
-                                class_=" ".join(icon_ton),
+                                class_=HTMLClasses.icon_ton(),
                             )
-                            status_avail = [
-                                "table-cell-value",
-                                "tm-value",
-                                "tm-status-avail",
-                            ]
                             status = block.find(
                                 "div",
-                                class_=" ".join(status_avail),
+                                class_=HTMLClasses.status_avail(),
                             )
 
                             if status is None:
-                                status_unavail = [
-                                    "table-cell-value",
-                                    "tm-value",
-                                    "tm-status-unavail",
-                                ]
                                 status = block.find(
                                     "div",
-                                    class_=" ".join(status_unavail),
+                                    class_=HTMLClasses.status_unavail(),
                                 )
                             if status is None:
                                 status = block.find(
@@ -422,14 +386,9 @@ class UsernameParser:
                                 )
 
                             if status is None:
-                                status_taken = [
-                                    "table-cell-value",
-                                    "tm-value",
-                                    "tm-status-taken",
-                                ]
                                 status = block.find(
                                     "div",
-                                    class_=" ".join(status_taken),
+                                    class_=HTMLClasses.status_taken(),
                                 )
 
                             username_ = (
@@ -471,8 +430,7 @@ class UsernameParser:
                             # прерывание если решим поиска точный
                             if is_exactly:
                                 print(table)
-                                input("\nplease enter: ")
-                                break
+                                return
 
                         print(table)
                     else:
@@ -511,25 +469,15 @@ class UsernameParser:
                         )
 
                         for block in blocks:
-                            status_avail = [
-                                "table-cell-value",
-                                "tm-value",
-                                "tm-status-avail",
-                            ]
                             status = block.find(
                                 "div",
-                                class_=" ".join(status_avail),
+                                class_=HTMLClasses.status_avail(),
                             )
 
                             if status is None:
-                                status_unavail = [
-                                    "table-cell-value",
-                                    "tm-value",
-                                    "tm-status-unavail",
-                                ]
                                 status = block.find(
                                     "div",
-                                    class_=" ".join(status_unavail),
+                                    class_=HTMLClasses.status_unavail(),
                                 )
                             if status is None:
                                 status = block.find(
@@ -537,14 +485,9 @@ class UsernameParser:
                                 )
 
                             if status is None:
-                                status_taken = [
-                                    "table-cell-value",
-                                    "tm-value",
-                                    "tm-status-taken",
-                                ]
                                 status = block.find(
                                     "div",
-                                    class_=" ".join(status_taken),
+                                    class_=HTMLClasses.status_taken(),
                                 )
                             if status is None:
                                 status_unavail = [
@@ -692,7 +635,8 @@ class UsernameParser:
     @staticmethod
     async def run() -> None:
         """
-        Какой тип парсинга юза
+        главная функция для выбора какой тип парсинга
+        нужес для работы с юзернеймами
 
         Raises:
             Exception: если не соотвествует длине
@@ -705,11 +649,11 @@ class UsernameParser:
 
             if user_input == 1:
                 await UsernameParser.market_parsing()  # парсим рынок юзов
-                input("\nplease enter: ")
             elif user_input == 2:
                 username = await UsernameParser.get_username(text="Введите юз")
                 is_exactly = check_input("точное совпадение? 1=Дa/2=Нет")
 
+                # определяем точное собпадение или нет
                 if is_exactly <= 1:
                     is_exactly = True
                 elif is_exactly >= 2:
@@ -718,7 +662,6 @@ class UsernameParser:
                 await UsernameParser.сheck_username_market(
                     username=username, is_exactly=is_exactly
                 )  # проверяем есть ли юз на рынке
-                input("\nplease enter: ")
             elif user_input == 3:
                 print(UsernameParser.banner_generate_username())
 
@@ -750,7 +693,6 @@ class UsernameParser:
                             username=username
                         )
                         print(status_color(status), username)
-                    input("\nplease enter: ")
                 elif user_input == 2:
                     "Вынести в отдельную функцию"
                     while True:
@@ -837,7 +779,6 @@ class UsernameParser:
                         + f"не определённые: {other} | не определил статус"
                         + Colors.RESET
                     )
-                    input("\nplease enter: ")
             elif user_input == 4:
                 endpoint = "username"
                 username = input("Введите юз: ")
@@ -846,6 +787,6 @@ class UsernameParser:
                     await UsernameParser.full_info_username(url)
                 else:
                     print(Colors.RED + "не похоже на юз" + Colors.RESET)
-                input("\nplease enter: ")
+            input("\nplease enter: ")
         except (KeyboardInterrupt, SystemExit, EOFError):
             sys.exit(1)
