@@ -1,0 +1,23 @@
+[project]
+name = "parser-fragment"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "MypKANTI", email = "mypkanti@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp==3.10.5",
+    "beautifulsoup4==4.12.3",
+    "faker==29.0.0",
+    "lxml>=6.1.2",
+    "prettytable==3.11.0",
+]
+
+[project.scripts]
+parser-fragment = "parser_fragment:main"
+
+[build-system]
+requires = ["uv_build>=0.12.7,<0.13.0"]
+build-backend = "uv_build"

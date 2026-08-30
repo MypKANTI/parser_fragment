@@ -66,6 +66,23 @@ pip3 install -r requirements.txt
 python3 main.py
 ```
 
+## install через [uv](https://github.com/astral-sh/uv)
+Установка через uv (не универсальная)
+
+```pip install uv```
+
+
+## установка программы
+```bash
+git clone https://github.com/MypKANTI/parser_fragment.git
+
+cd parser_fragment
+
+uv sync
+
+uv run main.py
+```
+
 ## О парсере
 Программа не использует API она парсит все данные через bs4 написанно одним человеком на python используеться aiohttp и asyncio
 
