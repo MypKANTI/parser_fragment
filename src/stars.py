@@ -10,9 +10,9 @@ from src.utils import (
     ClientParser,
     Colors,
     check_input,
-    clear_screen,
     generate_headers,
     hendler_error,
+    is_clear_decorator,
     is_object,
 )
 
@@ -113,19 +113,14 @@ class StarParser:
                 logging.error("не смог найти Content-type")
 
     @staticmethod
-    def banner_main_input(clear: bool = True) -> int:
+    @is_clear_decorator(True)
+    def banner_main_input() -> int:
         """
         Главный банер выбора из типа звёзд
-
-        Args:
-            clear (bool): очищать экран или нет
 
         Return
             (int): число ведённое пользователем
         """
-        if clear:
-            clear_screen()
-
         print("""
         1 Звезды Telegram цены
         2 Звезды цены на розыгрыш

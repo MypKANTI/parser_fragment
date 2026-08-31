@@ -122,6 +122,27 @@ def clear_screen() -> None:
     subprocess.run("cls" if os.name == "nt" else "clear", shell=True)
 
 
+def is_clear_decorator(is_clear: bool):
+    """
+    декоратор очистки экрана по флагу
+
+    Args:
+        is_clear (bool): True очистить False игнорить
+    """
+
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            if is_clear:
+                clear_screen()
+            result = func(*args, **kwargs)
+            return result
+
+        return wrapper
+
+    return decorator
+
+
 def banner(clear: bool = True) -> str:
     """
     главный банер выбора что именно парсить

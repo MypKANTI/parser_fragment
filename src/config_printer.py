@@ -1,13 +1,11 @@
 from src.config import Config
-from src.utils import clear_screen
+from src.utils import is_clear_decorator
 
 
 class ConfigPrinter:
     @staticmethod
-    def banner(clear: bool = True) -> str:
-        if clear:
-            clear_screen()
-
+    @is_clear_decorator(True)
+    def banner() -> str:
         return f"""
     {"Config":.^50}
         Ссылка парсинга: {Config.URL_BASE}

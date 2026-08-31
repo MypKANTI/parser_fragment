@@ -16,9 +16,9 @@ from src.utils import (
     Colors,
     HTMLClasses,
     check_input,
-    clear_screen,
     generate_headers,
     hendler_error,
+    is_clear_decorator,
     is_object,
     status_color,
 )
@@ -26,19 +26,14 @@ from src.utils import (
 
 class UsernameParser:
     @staticmethod
-    def banner(clear: bool = True) -> str:
+    @is_clear_decorator(True)
+    def banner() -> str:
         """
         банер для выбора действик
-
-        Args:
-            clear (bool) очищать экран или нет
 
         Return:
             str: банер выбора действий
         """
-        if clear:
-            clear_screen()
-
         return """
     1 получить список юзов
     2 проверить юз на аукционе
@@ -47,19 +42,14 @@ class UsernameParser:
     """
 
     @staticmethod
-    def banner_sort_filter(clear: bool = True) -> str:
+    @is_clear_decorator(True)
+    def banner_sort_filter() -> str:
         """
         банер для выбора действик
-
-        Args:
-            clear (bool) очищать экран или нет
 
         Return:
             str: банер выбора действий
         """
-        if clear:
-            clear_screen()
-
         return """
     1 На аукционе
     2 Продано
@@ -67,19 +57,14 @@ class UsernameParser:
     """
 
     @staticmethod
-    def banner_sort_sort(clear: bool = True) -> str:
+    @is_clear_decorator(True)
+    def banner_sort_sort() -> str:
         """
         банер для выбора действик
-
-        Args:
-            clear (bool) очищать экран или нет
 
         Return:
             str: банер выбора действий
         """
-        if clear:
-            clear_screen()
-
         return """
     1 Цена от высокой до низкой
     2 Цена от низкой к высокой
@@ -88,19 +73,14 @@ class UsernameParser:
     """
 
     @staticmethod
-    def banner_generate_username(clear: bool = True) -> str:
+    @is_clear_decorator(True)
+    def banner_generate_username() -> str:
         """
-        бБанер выбора типа генерации юзов
-
-        Args:
-            clear (bool) очищать экран или нет
+        Банер выбора типа генерации юзов
 
         Return:
             str: банер выбора действий
         """
-        if clear:
-            clear_screen()
-
         return """
     1 генерация олгоритм (рандом)
     2 генерация олгоритм (последовательность)

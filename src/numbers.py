@@ -11,9 +11,9 @@ from src.utils import (
     HTMLClasses,
     InfoFullPrint,
     check_input,
-    clear_screen,
     generate_headers,
     hendler_error,
+    is_clear_decorator,
     is_object,
     status_color,
 )
@@ -25,19 +25,14 @@ class NumberParser:
     """
 
     @staticmethod
-    def banner_main_input(clear: bool = True) -> int:
+    @is_clear_decorator(True)
+    def banner_main_input() -> int:
         """
         Главный банер
-
-        Args:
-            clear (bool): очищать эран или нет
 
         Return:
             int: возрашаем ведённое число
         """
-        if clear:
-            clear_screen()
-
         print("""
     1. Узнать статус номера +888 (через фрагмент)
     2. Информация о номере +888 (кратко)
