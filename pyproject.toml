@@ -13,6 +13,7 @@ dependencies = [
     "faker>=40.37.0",
     "lxml>=6.1.2",
     "prettytable>=3.18.0",
+    "pytest>=9.1.1",
 ]
 
 [project.scripts]
