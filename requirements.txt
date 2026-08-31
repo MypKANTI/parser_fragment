@@ -1,5 +1,5 @@
-aiohttp==3.10.5
-beautifulsoup4==4.12.3
-Faker==29.0.0
-prettytable==3.11.0
-lxml 
+aiohttp>=3.14.3
+beautifulsoup4>=4.15.0
+faker>=40.37.0
+prettytable>=3.18.0
+lxml>=6.1.2
