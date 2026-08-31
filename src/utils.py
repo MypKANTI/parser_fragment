@@ -142,6 +142,7 @@ def banner(clear: bool = True) -> str:
 |{'        3 >>> Numders'}         |
 |{'        4 >>> Username'}        |
 |{'        5 >>> Premium'}         |
+|{'        6 <-> Config'}          |
 +{'=' * 30}+
 
 пожалуйста выбирите что парсить

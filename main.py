@@ -17,6 +17,7 @@ import logging
 import os
 import sys
 
+from src.config_printer import ConfigPrinter
 from src.gifts import GiftParser
 from src.numbers import NumberParser
 from src.premiums import PremiumParser
@@ -59,11 +60,16 @@ async def main() -> None:
             3: NumberParser.run,
             4: UsernameParser.run,
             5: PremiumParser.run,
+            6: ConfigPrinter.run,
         }
 
         func_name = dict_funcs.get(user_input, None)
         if func_name is not None:
-            await func_name()
+            if user_input != 6:
+                await func_name()
+            else:
+                # функция не асинхронная по этому проверка на значение 6
+                func_name()
 
 
 if __name__ == "__main__":
