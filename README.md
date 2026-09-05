@@ -1,8 +1,7 @@
 # 🔍 Parser Fragment
 
-![Telegram](https://img.shields.io/badge/KANTI-Telegram-blue?logo=telegram&link=https://t.me/Myp_KANTI)
-![Python](https://img.shields.io/badge/Python-3.12.6-yellow?logo=python)
-![Python3](https://img.shields.io/badge/Python3-3.11.9-yellow?logo=python)
+[![Telegram](https://img.shields.io/badge/KANTI-Telegram-blue?logo=telegram)](https://t.me/Myp_KANTI)
+![Python](https://img.shields.io/badge/Python-3.11+-yellow?logo=python)
 
 Парсер сайта **[fragment](https://fragment.com/)**
 
@@ -10,7 +9,7 @@
 
 ## Доступно для парсинга
 Данные которые можем парсить благодаря этому парсеру
-- NFT
+- Gifts (NFT)
 - Stars
 - Numbers
 - Username
@@ -48,14 +47,15 @@
 | Windows  | work ✅|
 |  Ubuntu  | work ✅|
 |  Termux  | work ✅|
+|  Debian  | work ✅|
 
 ## Требование для запуска
 -  *OS*
 -  *Python* ---> **version 3.11+**
--  *Установить зависимости с* **requirements.txt**
+-  *Установить зависимости с* **requirements.txt или pyproject.toml**
 
 ## install
-Универсальная установка программы
+Универсальная установка программы подходит для большинства случаев
 ```bash
 git clone https://github.com/MypKANTI/parser_fragment.git
 
@@ -72,7 +72,7 @@ python3 main.py
 ```pip install uv```
 
 
-## установка программы
+## Установка программы
 ```bash
 git clone https://github.com/MypKANTI/parser_fragment.git
 
@@ -80,6 +80,53 @@ cd parser_fragment
 
 uv sync
 
+uv run main.py
+```
+
+# Установка для систем на базе Debian
+подойдёт для Debian, Parrot OS, kali linux и тд
+
+### Подготовка
+
+#### Нам понабодиться для этого
+- uv
+- python3
+- git
+
+#### Установка uv
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+#### Установка python3
+```bash
+sudo apt install python3
+```
+
+#### Установка Git
+```bash
+sudo apt install git
+```
+
+## Установка
+
+#### Клонируем репозиторий
+```bash
+git clone https://github.com/MypKANTI/parser_fragment.git
+```
+
+#### Переходим в нужную папку
+```bash
+cd parser_fragment
+```
+
+#### Синхронизация зависимостей
+```bash
+uv sync
+```
+
+#### Запуск
+```bash
 uv run main.py
 ```
 
