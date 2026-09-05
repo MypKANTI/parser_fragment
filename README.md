@@ -42,12 +42,13 @@
 
 ## Поддерживает
 Проверенно на личном опыте
-| platform | status |
-|----------|--------|
-| Windows  | work ✅|
-|  Ubuntu  | work ✅|
-|  Termux  | work ✅|
-|  Debian  | work ✅|
+|  platform  | status |
+|------------|--------|
+|  Windows   | work ✅|
+|  Ubuntu    | work ✅|
+|  Termux    | work ✅|
+|  Debian    | work ✅|
+| Kali linux | work ✅|
 
 ## Требование для запуска
 -  *OS*
