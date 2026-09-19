@@ -161,7 +161,7 @@ class NumberParser:
 
     @staticmethod
     async def info_numder_full(
-        session: aiohttp.ClientSession, number: str, endpoint: str
+        session: aiohttp.ClientSession, url: str
     ) -> None:
         """
         Функия для отображения полной информации о номере +888
@@ -174,7 +174,7 @@ class NumberParser:
             url (str): сылка для парсинга
         """
         async with session.get(
-            url=f"{Config.URL_BASE}{endpoint}/{number}",
+            url,
             headers=generate_headers(),
         ) as resp:
             resp.raise_for_status()
@@ -244,6 +244,6 @@ class NumberParser:
             elif user_input == 3:
                 endpoint = "number"
                 await NumberParser.info_numder_full(
-                    session, number, endpoint=endpoint
+                    session, f"{Config.URL_BASE}{endpoint}/{number}"
                 )
             input("\nplease enter: ")

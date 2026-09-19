@@ -602,15 +602,16 @@ class UsernameParser:
             else:
                 await asyncio.sleep(0.2)  # искуственная задержка
 
-    async def full_info_username(url: str) -> None:
+    async def full_info_username(session, url: str) -> None:
         """
         функция для получения полной информации
         о юзе создал эту фукцию из-за DRY
 
         Args:
+            session (aiohttp.Session)
             url (str): ссылка для парсинга
         """
-        await NumberParser.info_numder_full(url)
+        await NumberParser.info_numder_full(session, url)
 
     @staticmethod
     async def run() -> None:
@@ -764,7 +765,8 @@ class UsernameParser:
                 username = input("Введите юз: ")
                 if UsernameParser.check_valid_username_local(username):
                     url = f"{Config.URL_BASE}{endpoint}/{username}"
-                    await UsernameParser.full_info_username(url)
+                    async with ClientParser.start() as session:
+                        await UsernameParser.full_info_username(session, url)
                 else:
                     print(Colors.RED + "не похоже на юз" + Colors.RESET)
             input("\nplease enter: ")
